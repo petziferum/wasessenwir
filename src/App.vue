@@ -11,13 +11,15 @@
           height="60"
           width="200"
         />
-        Was Essen Wir?
+        <v-card-title class="font-weight-black text-uppercase">
+          Was Essen Wir?
+        </v-card-title>
       </div>
 
       <v-spacer></v-spacer>
     </v-app-bar>
 
-    <v-content>
+    <v-content class="bg">
       <HelloWorld />
     </v-content>
   </v-app>
@@ -38,3 +40,10 @@ export default {
   })
 };
 </script>
+
+<style>
+.bg {
+  background-color: #ffffff;
+  background-image: linear-gradient(315deg, #485461 30%, #28313b 75%);
+}
+</style>

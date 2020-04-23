@@ -9,14 +9,17 @@
           height="100px"
         />
       </v-row>
-      <v-row justify="center">
-        Ein Entscheidungsfinder um sich für ein Gericht zu entscheiden!
+      <v-row justify="center" dark>
+        <v-card-title class="white--text"
+          >Ein Entscheidungsfinder um sich für ein Gericht zu
+          entscheiden!</v-card-title
+        >
       </v-row>
       <v-row>
         <v-col cols="4" v-for="image in dishes" :key="image.id">
           <v-hover v-slot:default="{ hover }">
             <v-card
-              :elevation="hover ? 12 : 3"
+              :elevation="hover ? 12 : 0"
               height="220px"
               class="overflow-hidden text-center pa-0 ma-0"
             >
@@ -47,3 +50,7 @@ export default {
   })
 };
 </script>
+<style>
+.bg {
+}
+</style>
