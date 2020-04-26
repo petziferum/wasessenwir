@@ -1,16 +1,16 @@
 <template>
-  <v-row>
+  <v-row no-gutters>
     <v-col>
-      <v-row>
+      <v-row no-gutters>
         <v-img
-          :src="require('../assets/fast-food.svg')"
-          class="my-3"
-          contain
-          height="100px"
+          :src="require('../assets/textlogo.svg')"
+          class="my-0"
+          cover
+          height="300px"
         />
       </v-row>
-      <v-row justify="center" dark>
-        <v-card-title class="white--text"
+      <v-row justify="center" no-gutters style="border-top: solid 4px white;">
+        <v-card-title class=" white--text"
           >Ein Entscheidungsfinder um sich für ein Gericht zu
           entscheiden!</v-card-title
         >

@@ -20,20 +20,16 @@
     </v-app-bar>
 
     <v-content class="bg">
-      <HelloWorld />
+      <router-view />
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
-
 export default {
   name: "App",
 
-  components: {
-    HelloWorld
-  },
+  components: {},
 
   data: () => ({
     logo: require("@/assets/fast-food.svg")
@@ -43,7 +39,6 @@ export default {
 
 <style>
 .bg {
-  background-color: #ffffff;
-  background-image: linear-gradient(315deg, #485461 30%, #28313b 75%);
+  background-color: #ff7e00;
 }
 </style>
