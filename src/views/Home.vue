@@ -1,10 +1,13 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <v-btn to="/Hello">Essen</v-btn>
-    <v-divider></v-divider>
-    <v-btn to="/about">about</v-btn>
-  </div>
+  <v-container>
+    <v-row justify="center">
+      <v-col cols="6">
+        <v-card>
+          <v-card-title>Rezepte: </v-card-title>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
