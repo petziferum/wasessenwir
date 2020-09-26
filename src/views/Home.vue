@@ -4,7 +4,7 @@
       <v-col cols="11" lg="6">
         <v-card>
           <div class="pa-2">
-            <v-form @submit.prevent="search">
+            <v-form ref="searchForm" @submit.prevent="search">
               <v-text-field
                 v-model="searchValue"
                 id="search-item"
@@ -19,7 +19,8 @@
     <v-row justify="center">
       <v-col cols="11">
         <v-tabs v-model="tab">
-          <v-tab-item>
+          <div class="pa-2">Rezepte</div>
+          <v-tab-item class="mt-0 pa-0 elevation-4">
             <List v-on:recipe="showRecipe" :items="searchItem" />
           </v-tab-item>
           <v-tab-item>
@@ -63,6 +64,7 @@ export default {
       this.activeRecipe = n;
       this.tab = 1;
       console.info("recipe", n);
+      this.searchValue = ""
     }
   },
   computed: {

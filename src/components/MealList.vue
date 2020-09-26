@@ -3,8 +3,14 @@
     <v-col cols="12">
       <v-list elevation="10">
         <v-subheader>Rezepte</v-subheader>
-        <template v-for="(n) in items">
-          <v-list-item link @click="$emit('recipe', n)" three-line :key="n.id" class="rounded">
+        <template v-for="n in items">
+          <v-list-item
+            link
+            @click="$emit('recipe', n)"
+            three-line
+            :key="n.id"
+            class="rounded"
+          >
             <v-list-item-content>
               <v-list-item-title>Rezept {{ n.name }}</v-list-item-title>
               <v-list-item-subtitle>{{ n.description }}</v-list-item-subtitle>
@@ -19,7 +25,6 @@
             <v-list-item-action>
               <v-icon color="grey lighten-1">mdi-arrow-right</v-icon>
             </v-list-item-action>
-
           </v-list-item>
           <v-divider :key="`${n.id}-d`"></v-divider>
         </template>
@@ -31,9 +36,8 @@
 <script>
 export default {
   name: "MealList",
-  props:[ "items"],
-  methods: {
-  }
+  props: ["items"],
+  methods: {}
 };
 </script>
 
