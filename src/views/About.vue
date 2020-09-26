@@ -5,7 +5,7 @@
         flat
         color="#6A76AB"
         light
-        height="200px"
+        height="200"
         shrink-on-scroll
         class="bg"
         :src="require('@/assets/iso-house.png')"

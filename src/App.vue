@@ -1,15 +1,15 @@
 <template>
   <v-app>
-    <v-app-bar app class="pa-0" color="primary" dark>
+    <v-app-bar collapse-on-scroll app class="pa-0" color="primary" dark>
       <div class="d-flex align-center center mt-0 ml-0">
         <v-img
           alt="Seiten Logo"
-          class="mr-2 pa-0"
+          class="ma-0 pa-0"
           :src="logo"
           contain
           transition="scale-transition"
           height="60"
-          width="200"
+          width="100"
         />
         <v-card-title class="font-weight-black text-uppercase">
           Was Essen Wir?
