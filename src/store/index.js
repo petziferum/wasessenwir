@@ -8,6 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    drawer: false,
     question: [],
     meals: []
   },
@@ -34,7 +35,7 @@ export default new Vuex.Store({
     },
     setMeal: ({ commit }) => {
       let zahl = MealData.length;
-      let rand = Math.floor(Math.random() * (zahl)); // rand ist random 0 bis 2 und wird dem MealData als Index übergeben. MealData[0], MealData[1] usw...
+      let rand = Math.floor(Math.random() * zahl); // rand ist random 0 bis 2 und wird dem MealData als Index übergeben. MealData[0], MealData[1] usw...
       let newMeal = Meal.createNewMeal(MealData[rand]);
       console.info("random:", rand, zahl, ",", newMeal);
       commit("SET_MEALS", newMeal);
@@ -42,6 +43,10 @@ export default new Vuex.Store({
   },
 
   getters: {
+    drawer: state => {
+      return state.drawer;
+    },
+
     getQuestions: state => {
       return state.question;
     },
