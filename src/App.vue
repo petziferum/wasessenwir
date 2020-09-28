@@ -45,7 +45,11 @@
               <v-list-item-title v-text="item.title"></v-list-item-title>
             </v-list-item-content>
           </template>
-          <v-list-item :to="child.to" v-for="child in item.items" :key="child.title">
+          <v-list-item
+            :to="child.to"
+            v-for="child in item.items"
+            :key="child.title"
+          >
             <v-list-item-content>
               <v-list-item-title v-text="child.title"></v-list-item-title>
             </v-list-item-content>
@@ -67,7 +71,7 @@ export default {
   components: {},
 
   data: () => ({
-    drawer:false,
+    drawer: false,
     logo: require("@/assets/fast-food.svg"),
     singleItems: [
       {
@@ -89,12 +93,8 @@ export default {
       }
     ]
   }),
-  methods: {
-
-  },
-  computed: {
-
-  }
+  methods: {},
+  computed: {}
 };
 </script>
 
