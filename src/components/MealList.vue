@@ -11,9 +11,10 @@
             :key="n.id"
             class="rounded"
           >
+            <v-list-item-avatar width="80" height="80"><v-img :src="n.imageSrc" conver></v-img></v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title>Rezept {{ n.name }}</v-list-item-title>
-              <v-list-item-subtitle>{{ n.description }}</v-list-item-subtitle>
+              <v-list-item-title>{{ n.name }}</v-list-item-title>
+              <v-list-item-subtitle>{{ n.recipeDescription }}</v-list-item-subtitle>
               <v-list-item-subtitle class="mb-0">
                 <v-chip-group>
                   <v-chip x-small>Fleisch</v-chip>

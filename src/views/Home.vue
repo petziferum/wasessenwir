@@ -35,6 +35,8 @@
 <script>
 import List from "@/components/MealList";
 import Recipe from "@/components/Recipe";
+import db from "@/plugins/firebase";
+import firebase from "firebase";
 export default {
   name: "Home",
   components: {
@@ -45,26 +47,48 @@ export default {
     searchValue: "",
     activeRecipe: null,
     tab: 0,
+    images: "",
     recipes: [
-      {
-        id: "m1",
-        name: "Spaghetti",
-        description: "Spaghetti mit Hackfleisch Tomaten Soße"
-      },
-      { id: "m2", name: "Quiche", description: "Eine Quiche mit Eiern" },
-      { id: "m3", name: "Kasspatzen", description: "Kasspatzen" },
-      { id: "m4", name: "Brotzeit", description: "Brot mit Aufstrich" }
+
     ]
   }),
   methods: {
     search(value) {
       console.info("Es wird nach", value.target[0].value, "gesucht");
     },
+    getRecipes() {
+      db.collection("recipes")
+        .get()
+        .then(res => {
+          res.forEach(el => {
+            let r = el.data();
+            r.id = el.id;
+            r.description = "datenbank";
+            r.name = r.recipeName;
+            this.recipes.push(r);
+          });
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      this.getImages();
+    },
+    getImages() {
+      const storageRef = firebase.storage().ref()
+      const imageRef = storageRef.child("recipes")
+      imageRef.listAll().then(res => {
+        res.items.forEach(el => {
+          console.log("element", el)
+          this.images = "https://" + el.location.bucket + "/" + el.location.path
+        })
+      })
+
+    },
     showRecipe(n) {
       this.activeRecipe = n;
       this.tab = 1;
       console.info("recipe", n);
-      this.searchValue = ""
+      this.searchValue = "";
     }
   },
   computed: {
@@ -76,6 +100,9 @@ export default {
           .every(v => el.description.toLowerCase().includes(v));
       });
     }
+  },
+  beforeMount() {
+    this.getRecipes();
   }
 };
 </script>

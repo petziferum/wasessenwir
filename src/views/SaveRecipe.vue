@@ -8,28 +8,41 @@
         <v-card-subtitle>
           {{ user.email }}
         </v-card-subtitle>
-        <v-form ref="form" @submit.prevent="saveFile">
-          <v-text-field label="Rezept Name" v-model="recipeName"></v-text-field>
-          <v-row>
-            <v-col cols-12>
-              <v-btn outlined class="primary" @click="onPickFile" dark
-                ><v-icon left>mdi-camera-outline</v-icon> Image</v-btn
-              >
-              <input
-                class="caption ma-2"
-                v-show="false"
-                contenteditable="false"
-                type="file"
-                prepend-icon="mdi-camera"
-                ref="fileInput"
-                @change="onFilePicked"
-              />
-              <span v-if="image"> {{ filename }}</span
-              ><v-btn text>X</v-btn>
+        <v-card-actions>
+          <v-row justify="center">
+            <v-col cols="8">
+              <v-form ref="form" @submit.prevent="saveFile">
+                <v-text-field
+                  label="Rezept Name"
+                  v-model="recipeName"
+                ></v-text-field>
+                <v-textarea outlined  label="Beschreibung" v-model="recipeDescription"></v-textarea>
+                <v-row>
+                  <v-col cols-12>
+                    <v-btn outlined class="primary" @click="onPickFile" dark>
+                      <v-icon left>mdi-camera-outline</v-icon>
+                      Bild
+                    </v-btn>
+                    <input
+                      class="caption ma-2"
+                      v-show="false"
+                      contenteditable="false"
+                      type="file"
+                      prepend-icon="mdi-camera"
+                      ref="fileInput"
+                      @change="onFilePicked"
+                    />
+                    <span v-if="image"> {{ filename }}</span>
+                    <v-btn text>X</v-btn>
+                  </v-col>
+                </v-row>
+                <v-btn block tile large elevation="5" type="submit"
+                  >Speichern
+                </v-btn>
+              </v-form>
             </v-col>
           </v-row>
-          <v-btn block tile large elevation="5" type="submit">Speichern</v-btn>
-        </v-form>
+        </v-card-actions>
       </v-card>
       {{ image }}
     </v-col>
@@ -44,6 +57,7 @@ export default {
   name: "SaveRecipe",
   data: () => ({
     recipeName: "",
+    recipeDescription:"",
     imgsrc: "",
     image: null,
     filename: null,
@@ -72,26 +86,45 @@ export default {
 
       let input = {
         recipeName: this.recipeName,
+        recipeDescription: this.recipeDescription,
         imageName: this.filename,
+        imageSrc: "",
         time: Date.now()
       };
       //const metadata = { contentType: "image/jpeg" }
-      db.collection("recipes")
+      db.collection("recipes") //1. Verbindung zur Cloud Datenbank, um Dokument anzulegen
         .add(input)
         .then(res => {
-          let key = res.id;
+          let key = res.id; //2. Die ID des neuen Dokuments wird in "key" gespeichert
           console.log("key:", key);
-          return key;
+          return key; //3. key wird weitergereicht
         })
         .then(key => {
-          let ext = input.imageName.slice(input.imageName.lastIndexOf("."));
-          console.log("ext", ext)
-          return firebase
+          let ext = input.imageName.slice(input.imageName.lastIndexOf(".")); // 4. Dateiname wird erstellt
+          console.log("ext", ext);
+          return firebase // 5. Verbindung mit dem Firebase Storage wird hergestellt in dem Pfad "recipes/"
             .storage()
             .ref("recipes/" + key + ext)
             .put(file)
+            .then(fileData => {
+              console.log("fileData: ", fileData); // 6. Bild wird gespeichert und als Objekt angelegt
+              return firebase
+                .storage()
+                .ref("recipes/" + key + ext)
+                .getDownloadURL(); //7. Die URL des Bildes wird zurück gegeben
+            })
             .then(URL => {
               console.log("hochgeladen", URL);
+              this.imgsrc = URL;
+              return db
+                .collection("recipes")
+                .doc(key)
+                .update({
+                  imageSrc: URL // 8. Die URL zum Bild wird im gerade erstellten Dokument gespeichert, welches anhand des keys gefunden wird
+                })
+                .then(() => {
+                  console.log("Dokument" + key + "aktuallisiert mit " + URL);
+                });
             })
             .catch(error => {
               console.error("Fehler: ", error);
