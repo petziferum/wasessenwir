@@ -13,12 +13,11 @@
           >
             <v-list-item-avatar width="80" height="80"><v-img :src="n.imageSrc" conver></v-img></v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title>{{ n.name }}</v-list-item-title>
+              <v-list-item-title>{{ n.recipeName }}</v-list-item-title>
               <v-list-item-subtitle>{{ n.recipeDescription }}</v-list-item-subtitle>
               <v-list-item-subtitle class="mb-0">
                 <v-chip-group>
-                  <v-chip x-small>Fleisch</v-chip>
-                  <v-chip x-small>Easy</v-chip>
+                  <v-chip class="rounded-0 elevation-3" small v-for="(i,x) in n.ingredients" :key="i+x">{{ i }}</v-chip>
                 </v-chip-group>
               </v-list-item-subtitle>
             </v-list-item-content>

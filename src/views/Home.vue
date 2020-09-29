@@ -48,9 +48,7 @@ export default {
     activeRecipe: null,
     tab: 0,
     images: "",
-    recipes: [
-
-    ]
+    recipes: []
   }),
   methods: {
     search(value) {
@@ -63,8 +61,9 @@ export default {
           res.forEach(el => {
             let r = el.data();
             r.id = el.id;
-            r.description = "datenbank";
-            r.name = r.recipeName;
+            if(!r.recipeDescription) {
+              r.recipeDescription = "";
+            }
             this.recipes.push(r);
           });
         })
@@ -74,15 +73,14 @@ export default {
       this.getImages();
     },
     getImages() {
-      const storageRef = firebase.storage().ref()
-      const imageRef = storageRef.child("recipes")
+      const storageRef = firebase.storage().ref();
+      const imageRef = storageRef.child("recipes");
       imageRef.listAll().then(res => {
         res.items.forEach(el => {
-          console.log("element", el)
-          this.images = "https://" + el.location.bucket + "/" + el.location.path
-        })
-      })
-
+          this.images =
+            "https://" + el.location.bucket + "/" + el.location.path;
+        });
+      });
     },
     showRecipe(n) {
       this.activeRecipe = n;
@@ -97,7 +95,7 @@ export default {
         return this.searchValue
           .toLowerCase()
           .split(" ")
-          .every(v => el.description.toLowerCase().includes(v));
+          .every(v => el.recipeName.toLowerCase().includes(v));
       });
     }
   },

@@ -17,6 +17,7 @@
                   v-model="recipeName"
                 ></v-text-field>
                 <v-textarea outlined  label="Beschreibung" v-model="recipeDescription"></v-textarea>
+                <v-combobox label="Zutaten" :items="ingredientItems" v-model="ingredients" multiple></v-combobox>
                 <v-row>
                   <v-col cols-12>
                     <v-btn outlined class="primary" @click="onPickFile" dark>
@@ -57,6 +58,8 @@ export default {
   name: "SaveRecipe",
   data: () => ({
     recipeName: "",
+    ingredients: [],
+    ingredientItems: ["Hackfleisch", "Tomaten", "Salz", "Eier"],
     recipeDescription:"",
     imgsrc: "",
     image: null,
@@ -89,6 +92,7 @@ export default {
         recipeDescription: this.recipeDescription,
         imageName: this.filename,
         imageSrc: "",
+        ingredients: this.ingredients,
         time: Date.now()
       };
       //const metadata = { contentType: "image/jpeg" }
