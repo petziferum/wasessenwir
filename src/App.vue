@@ -94,7 +94,10 @@ export default {
     ]
   }),
   methods: {},
-  computed: {}
+  computed: {},
+  beforeMount() {
+    this.$store.dispatch("getRecipes");
+  }
 };
 </script>
 

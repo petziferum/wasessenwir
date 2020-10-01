@@ -21,7 +21,7 @@
         <v-tabs v-model="tab">
           <div class="pa-2">Rezepte</div>
           <v-tab-item class="mt-0 pa-0 elevation-4">
-            <List v-on:recipe="showRecipe" :items="searchItem" />
+            <List v-on:recipe="showRecipe" :items="recipes" />
           </v-tab-item>
           <v-tab-item>
             <Recipe v-on:back="tab = 0" :recipe="activeRecipe"></Recipe>
@@ -35,7 +35,6 @@
 <script>
 import List from "@/components/MealList";
 import Recipe from "@/components/Recipe";
-import db from "@/plugins/firebase";
 import firebase from "firebase";
 export default {
   name: "Home",
@@ -47,30 +46,11 @@ export default {
     searchValue: "",
     activeRecipe: null,
     tab: 0,
-    images: "",
-    recipes: []
+    images: ""
   }),
   methods: {
     search(value) {
       console.info("Es wird nach", value.target[0].value, "gesucht");
-    },
-    getRecipes() {
-      db.collection("recipes")
-        .get()
-        .then(res => {
-          res.forEach(el => {
-            let r = el.data();
-            r.id = el.id;
-            if(!r.recipeDescription) {
-              r.recipeDescription = "";
-            }
-            this.recipes.push(r);
-          });
-        })
-        .catch(error => {
-          console.error(error);
-        });
-      this.getImages();
     },
     getImages() {
       const storageRef = firebase.storage().ref();
@@ -90,8 +70,11 @@ export default {
     }
   },
   computed: {
+    recipes() {
+      return this.$store.getters.getRecipes;
+    },
     searchItem() {
-      return this.recipes.filter(el => {
+      return this.$store.getters.getRecipes.filter(el => {
         return this.searchValue
           .toLowerCase()
           .split(" ")
@@ -100,7 +83,6 @@ export default {
     }
   },
   beforeMount() {
-    this.getRecipes();
   }
 };
 </script>
