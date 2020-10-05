@@ -33,20 +33,24 @@
           <v-card-actions>
             <v-row justify="center">
               <v-col cols="8">
-                <v-form ref="form" @submit.prevent="saveFile">
+                <v-form ref="form" @submit.prevent="openD">
                   <v-text-field
                     label="Rezept Name"
                     v-model="recipeName"
+                    :rules="filled"
                   ></v-text-field>
                   <v-textarea
                     outlined
                     label="Beschreibung"
                     v-model="recipeDescription"
+                    :rules="filled"
                   ></v-textarea>
                   <v-combobox
                     label="Zutaten"
                     :items="ingredientItems"
                     v-model="ingredients"
+                    chips
+                    outlined
                     multiple
                   ></v-combobox>
                   <v-row>
@@ -68,9 +72,38 @@
                       <v-btn text>X</v-btn>
                     </v-col>
                   </v-row>
-                  <v-btn block tile large elevation="5" type="submit"
+
+                  <v-btn type="submit" block tile large elevation="5"
                     >Speichern
                   </v-btn>
+                  <v-dialog persistent v-model="finishDialog" max-width="25em">
+                    <v-card>
+                      <v-card-title class="headline">
+                        Willst du das Rezept <br />"{{ recipeName }}" <br />
+                        speichern?
+                      </v-card-title>
+                      <v-card-text
+                        ><p>
+                          {{ recipeDescription }}
+                        </p>
+                        <p>{{ ingredients }}</p>
+                        <p>{{ image }}</p>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          color="green darken-1"
+                          text
+                          @click="finishDialog = false"
+                        >
+                          Abrechen
+                        </v-btn>
+                        <v-btn color="green darken-1" text @click="saveFile">
+                          Speichern
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
                 </v-form>
               </v-col>
             </v-row>
@@ -97,11 +130,18 @@ export default {
     image: null,
     filename: null,
     savedRecipe: null,
-    errorMessage: { state: true, text: "" }
+    errorMessage: { state: true, text: "" },
+    filled: [v => v != "" || "Field must not be empty"],
+    finishDialog: false
   }),
   methods: {
     onPickFile() {
       this.$refs.fileInput.click();
+    },
+    openD() {
+      if (this.$refs.form.validate()) {
+        this.finishDialog = true;
+      }
     },
     logIn() {
       firebase
@@ -137,44 +177,54 @@ export default {
         time: Date.now()
       };
       //const metadata = { contentType: "image/jpeg" }
-      db.collection("recipes") //1. Verbindung zur Cloud Datenbank, um Dokument anzulegen
-        .add(input)
-        .then(res => {
-          let key = res.id; //2. Die ID des neuen Dokuments wird in "key" gespeichert
-          console.log("key:", key);
-          return key; //3. key wird weitergereicht
-        })
-        .then(key => {
-          let ext = input.imageName.slice(input.imageName.lastIndexOf(".")); // 4. Dateiname wird erstellt
-          console.log("ext", ext);
-          return firebase // 5. Verbindung mit dem Firebase Storage wird hergestellt in dem Pfad "recipes/"
-            .storage()
-            .ref("recipes/" + key + ext)
-            .put(file)
-            .then(fileData => {
-              console.log("fileData: ", fileData); // 6. Bild wird gespeichert und als Objekt angelegt
-              return firebase
-                .storage()
-                .ref("recipes/" + key + ext)
-                .getDownloadURL(); //7. Die URL des Bildes wird zurück gegeben
-            })
-            .then(URL => {
-              console.log("hochgeladen", URL);
-              this.imgsrc = URL;
-              return db
-                .collection("recipes")
-                .doc(key)
-                .update({
-                  imageSrc: URL // 8. Die URL zum Bild wird im gerade erstellten Dokument gespeichert, welches anhand des keys gefunden wird
-                })
-                .then(() => {
-                  console.log("Dokument" + key + "aktuallisiert mit " + URL);
-                });
-            })
-            .catch(error => {
-              console.error("Fehler: ", error);
-            });
-        });
+      if (this.$refs.form.validate()) {
+        db.collection("recipes") //1. Verbindung zur Cloud Datenbank, um Dokument anzulegen
+          .add(input)
+          .then(res => {
+            let key = res.id; //2. Die ID des neuen Dokuments wird in "key" gespeichert
+            console.log("key:", key);
+            return key; //3. key wird weitergereicht
+          })
+          .then(key => {
+            let ext = input.imageName.slice(input.imageName.lastIndexOf(".")); // 4. Dateiname wird erstellt
+            console.log("ext", ext);
+            return firebase // 5. Verbindung mit dem Firebase Storage wird hergestellt in dem Pfad "recipes/"
+              .storage()
+              .ref("recipes/" + key + ext)
+              .put(file)
+              .then(fileData => {
+                console.log("fileData: ", fileData); // 6. Bild wird gespeichert und als Objekt angelegt
+                return firebase
+                  .storage()
+                  .ref("recipes/" + key + ext)
+                  .getDownloadURL(); //7. Die URL des Bildes wird zurück gegeben
+              })
+              .then(URL => {
+                console.log("hochgeladen", URL);
+                this.imgsrc = URL;
+                return db
+                  .collection("recipes")
+                  .doc(key)
+                  .update({
+                    imageSrc: URL // 8. Die URL zum Bild wird im gerade erstellten Dokument gespeichert, welches anhand des keys gefunden wird
+                  })
+                  .then(() => {
+                    console.log("Dokument" + key + "aktuallisiert mit " + URL);
+                  });
+              })
+              .catch(error => {
+                console.error("Fehler: ", error);
+              });
+          })
+          .then(() => {
+            this.finishDialog = false;
+            this.$refs.form.reset();
+            this.$router.push("/");
+          })
+          .finally(() => {
+            this.$store.dispatch("getRecipes");
+          });
+      }
     },
     sendInput() {
       let input = {
