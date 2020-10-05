@@ -1,52 +1,83 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-card class="my-2">
-        <v-card-title>
-          Save New Recipe
-        </v-card-title>
-        <v-card-subtitle>
-          {{ user.email }}
-        </v-card-subtitle>
-        <v-card-actions>
-          <v-row justify="center">
-            <v-col cols="8">
-              <v-form ref="form" @submit.prevent="saveFile">
-                <v-text-field
-                  label="Rezept Name"
-                  v-model="recipeName"
-                ></v-text-field>
-                <v-textarea outlined  label="Beschreibung" v-model="recipeDescription"></v-textarea>
-                <v-combobox label="Zutaten" :items="ingredientItems" v-model="ingredients" multiple></v-combobox>
-                <v-row>
-                  <v-col cols-12>
-                    <v-btn outlined class="primary" @click="onPickFile" dark>
-                      <v-icon left>mdi-camera-outline</v-icon>
-                      Bild
-                    </v-btn>
-                    <input
-                      class="caption ma-2"
-                      v-show="false"
-                      contenteditable="false"
-                      type="file"
-                      prepend-icon="mdi-camera"
-                      ref="fileInput"
-                      @change="onFilePicked"
-                    />
-                    <span v-if="image"> {{ filename }}</span>
-                    <v-btn text>X</v-btn>
-                  </v-col>
-                </v-row>
-                <v-btn block tile large elevation="5" type="submit"
-                  >Speichern
-                </v-btn>
-              </v-form>
-            </v-col>
-          </v-row>
-        </v-card-actions>
-      </v-card>
-      {{ image }}
-    </v-col>
+  <v-row justify="center">
+    <template v-if="user === null">
+      <v-col cols="12" sm="6" md="4" lg="3" class="text-center">
+        <v-card>
+          <v-card-title>Login</v-card-title>
+          <v-card-text>
+            <v-form ref="loginForm" @submit.prevent="logIn">
+              <v-text-field
+                label="Password"
+                type="password"
+                v-model="password"
+              ></v-text-field>
+              <v-card-text style="color:#ff0000" v-if="errorMessage.state">{{
+                errorMessage.text
+              }}</v-card-text
+              ><br />
+              <v-card-actions>
+                <v-btn type="submit">Login</v-btn>
+              </v-card-actions>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </template>
+    <template v-else>
+      <v-col>
+        <v-card class="my-2">
+          <v-card-title> Save New Recipe </v-card-title>
+          <v-card-subtitle>
+            {{ user.email }}
+          </v-card-subtitle>
+          <v-card-actions>
+            <v-row justify="center">
+              <v-col cols="8">
+                <v-form ref="form" @submit.prevent="saveFile">
+                  <v-text-field
+                    label="Rezept Name"
+                    v-model="recipeName"
+                  ></v-text-field>
+                  <v-textarea
+                    outlined
+                    label="Beschreibung"
+                    v-model="recipeDescription"
+                  ></v-textarea>
+                  <v-combobox
+                    label="Zutaten"
+                    :items="ingredientItems"
+                    v-model="ingredients"
+                    multiple
+                  ></v-combobox>
+                  <v-row>
+                    <v-col cols-12>
+                      <v-btn outlined class="primary" @click="onPickFile" dark>
+                        <v-icon left>mdi-camera-outline</v-icon>
+                        Bild
+                      </v-btn>
+                      <input
+                        class="caption ma-2"
+                        v-show="false"
+                        contenteditable="false"
+                        type="file"
+                        prepend-icon="mdi-camera"
+                        ref="fileInput"
+                        @change="onFilePicked"
+                      />
+                      <span v-if="image"> {{ filename }}</span>
+                      <v-btn text>X</v-btn>
+                    </v-col>
+                  </v-row>
+                  <v-btn block tile large elevation="5" type="submit"
+                    >Speichern
+                  </v-btn>
+                </v-form>
+              </v-col>
+            </v-row>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </template>
   </v-row>
 </template>
 
@@ -60,12 +91,13 @@ export default {
     recipeName: "",
     ingredients: [],
     ingredientItems: ["Hackfleisch", "Tomaten", "Salz", "Eier"],
-    recipeDescription:"",
+    recipeDescription: "",
     imgsrc: "",
+    password: "",
     image: null,
     filename: null,
-    user: null,
-    savedRecipe: null
+    savedRecipe: null,
+    errorMessage: { state: true, text: "" }
   }),
   methods: {
     onPickFile() {
@@ -74,10 +106,19 @@ export default {
     logIn() {
       firebase
         .auth()
-        .signInWithEmailAndPassword("test@test.de", "testtest")
+        .signInWithEmailAndPassword("test@test.de", this.password) //testtest
         .then(res => {
-          this.user = res.user;
-          console.log("eingeloggt", this.user.email);
+          this.$store.state.user = res.user;
+          console.log("eingeloggt", res);
+        })
+        .catch(error => {
+          this.errorMessage.state = true;
+          this.errorMessage.text = error;
+
+          console.error("fehler", error);
+        })
+        .finally(() => {
+          this.$refs.loginForm.reset();
         });
     },
     saveFile() {
@@ -194,10 +235,12 @@ export default {
       this.image = files[0];
     }
   },
-  computed: {},
-  mounted() {
-    this.logIn();
-  }
+  computed: {
+    user() {
+      return this.$store.getters.getUser;
+    }
+  },
+  mounted() {}
 };
 </script>
 

@@ -4,17 +4,19 @@ import Question from "../components/models/question";
 import Meal from "../components/models/Meal";
 import MealData from "./data/Meals";
 import db from "@/plugins/firebase";
-import firebase from "firebase";
+//import firebase from "firebase";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     drawer: false,
+    loading: false,
     question: [],
     meals: [],
     recipes: [],
-    images: ""
+    images: "",
+    user: null
   },
   mutations: {
     CREATE_QUESTION(state, payload) {
@@ -27,6 +29,11 @@ export default new Vuex.Store({
     },
     SET_RECIPES(state, payload) {
       state.recipes = payload;
+      state.loading = false;
+    },
+    loading(state, load) {
+      console.log("load", load);
+      state.loading = load;
     }
   },
   actions: {
@@ -43,9 +50,11 @@ export default new Vuex.Store({
     getRecipes({ commit, state }) {
       state.recipes = [];
       let payload = [];
+      console.log("loading", state.loading);
+      commit("loading", true);
 
-      const storageRef = firebase.storage().ref();
-      const imageRef = storageRef.child("recipes");
+      //const storageRef = firebase.storage().ref();
+      //const imageRef = storageRef.child("recipes");
       db.collection("recipes")
         .get()
         .then(res => {
@@ -57,23 +66,20 @@ export default new Vuex.Store({
             }
             payload.push(r);
           });
+          commit("SET_RECIPES", payload);
         })
         .catch(error => {
           console.error(error);
+        })
+        .finally(() => {
+          commit("loading", false);
         });
 
-      console.log(payload);
-      state.recipes.filter((el, i) => {
-        console.log(el.indexOf(el) === i);
-      });
-
-      commit("SET_RECIPES", payload);
-
-      imageRef.listAll().then(res => {
+      /*imageRef.listAll().then(res => {
         res.items.forEach(el => {
           console.log("el", el);
         });
-      });
+      }); */
     },
     setMeal: ({ commit }) => {
       let zahl = MealData.length;
@@ -85,13 +91,18 @@ export default new Vuex.Store({
   },
 
   getters: {
+    loading: state => {
+      return state.loading;
+    },
     getRecipes: state => {
       return state.recipes;
     },
     drawer: state => {
       return state.drawer;
     },
-
+    getUser: state => {
+      return state.user;
+    },
     getQuestions: state => {
       return state.question;
     },
