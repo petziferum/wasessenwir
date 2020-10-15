@@ -18,7 +18,11 @@
       </div>
 
       <v-spacer></v-spacer>
-      <v-btn icon @click="logOut"><v-icon large :color="user ? 'green' : 'red'">mdi-account</v-icon></v-btn>
+      <v-btn icon @click="logOut"
+        ><v-icon large :color="user ? 'green' : 'red'"
+          >mdi-account</v-icon
+        ></v-btn
+      >
     </v-app-bar>
 
     <v-navigation-drawer app temporary v-model="drawer">
@@ -70,7 +74,7 @@
 </template>
 
 <script>
-import firebase from "firebase"
+import firebase from "firebase";
 export default {
   name: "App",
 
@@ -102,11 +106,15 @@ export default {
   }),
   methods: {
     logOut() {
-      firebase.auth().signOut().then(function() {
-        // Sign-out successful.
-      }).catch(function(error) {
-        console.error("An error happened", error)
-      });
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          return this.$store.commit("SET_USER", null);
+        })
+        .catch(function(error) {
+          console.error("An error happened", error);
+        });
     }
   },
   computed: {

@@ -73,7 +73,7 @@
                     </v-col>
                   </v-row>
 
-                  <v-btn type="submit" block tile large elevation="5"
+                  <v-btn :loading="loading" type="submit" block tile large elevation="5"
                     >Speichern
                   </v-btn>
                   <v-dialog persistent v-model="finishDialog" max-width="25em">
@@ -87,7 +87,7 @@
                           {{ recipeDescription }}
                         </p>
                         <p>{{ ingredients }}</p>
-                        <p>{{ image }}</p>
+                        <p>{{ filename }}</p>
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
@@ -141,6 +141,7 @@ export default {
     openD() {
       if (this.$refs.form.validate()) {
         this.finishDialog = true;
+        this.$store.commit("loading", true)
       }
     },
     logIn() {
@@ -154,7 +155,6 @@ export default {
         .catch(error => {
           this.errorMessage.state = true;
           this.errorMessage.text = error;
-
           console.error("fehler", error);
         })
         .finally(() => {
@@ -162,11 +162,9 @@ export default {
         });
     },
     saveFile() {
-      console.log("image: ", this.image);
-      console.log("filename: ", this.filename);
-      console.log("imgsrc: ", this.imgsrc);
+      this.finishDialog = false;
       const file = this.image;
-      console.log(file);
+
 
       let input = {
         recipeName: this.recipeName,
@@ -182,12 +180,11 @@ export default {
           .add(input)
           .then(res => {
             let key = res.id; //2. Die ID des neuen Dokuments wird in "key" gespeichert
-            console.log("key:", key);
             return key; //3. key wird weitergereicht
           })
           .then(key => {
             let ext = input.imageName.slice(input.imageName.lastIndexOf(".")); // 4. Dateiname wird erstellt
-            console.log("ext", ext);
+
             return firebase // 5. Verbindung mit dem Firebase Storage wird hergestellt in dem Pfad "recipes/"
               .storage()
               .ref("recipes/" + key + ext)
@@ -208,9 +205,6 @@ export default {
                   .update({
                     imageSrc: URL // 8. Die URL zum Bild wird im gerade erstellten Dokument gespeichert, welches anhand des keys gefunden wird
                   })
-                  .then(() => {
-                    console.log("Dokument" + key + "aktuallisiert mit " + URL);
-                  });
               })
               .catch(error => {
                 console.error("Fehler: ", error);
@@ -286,6 +280,9 @@ export default {
     }
   },
   computed: {
+    loading()  {
+      return this.$store.getters.loading;
+    },
     user() {
       return this.$store.getters.getUser;
     }

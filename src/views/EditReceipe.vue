@@ -13,7 +13,7 @@
         <v-row>
           <v-col cols="12">
             <v-form ref="formContent" @submit.prevent="saveEditedContent">
-              <v-text-field label="Rezept Name" v-model="title"></v-text-field> <!--ToDo: Titel muss noch geupdated werden -->
+              <v-text-field label="Rezept Name" v-model="title"></v-text-field>
               <v-textarea label="Anleitung" v-model="content"></v-textarea>
               <v-btn type="submit">speichern</v-btn>
             </v-form>
@@ -42,6 +42,7 @@ export default {
       db.collection("recipes")
         .doc(this.recipe.id)
         .update({
+          recipeName: this.title,
           recipeDescription: this.content
         })
         .then(() => {

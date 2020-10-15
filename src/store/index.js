@@ -35,7 +35,6 @@ export default new Vuex.Store({
       state.loading = load;
     },
     SET_USER(state, payload) {
-      console.log("autologin", payload)
       state.user = payload
     }
   },
