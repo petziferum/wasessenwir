@@ -30,6 +30,11 @@ const routes = [
     name: "newRecipe",
     component: () => import("@/views/SaveRecipe")
   },
+  {
+    path: "/login",
+    name: "login",
+    component: () => import("@/views/LoginPage")
+  },
 ];
 
 const router = new VueRouter({

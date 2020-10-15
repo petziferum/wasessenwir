@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar clipped collapse-on-scroll app class="pa-0" color="primary" dark>
+    <v-app-bar clipped app class="pa-0" color="primary" dark>
       <div class="d-flex align-center center mt-0 ml-0">
         <v-app-bar-nav-icon @click="drawer = !drawer"> </v-app-bar-nav-icon>
         <v-img
@@ -13,17 +13,22 @@
           width="100"
         />
         <v-card-title class="font-weight-black text-uppercase">
-          Was Essen Wir?
+          Rezept-o-Mat
         </v-card-title>
       </div>
 
       <v-spacer></v-spacer>
+      <v-btn icon @click="logOut"><v-icon large :color="user ? 'green' : 'red'">mdi-account</v-icon></v-btn>
     </v-app-bar>
 
     <v-navigation-drawer app temporary v-model="drawer">
       <v-list>
         <v-list-item-group>
-          <v-list-item :to="item.to" v-for="item in singleItems" :key="item.title">
+          <v-list-item
+            :to="item.to"
+            v-for="item in singleItems"
+            :key="item.title"
+          >
             <v-list-item-icon
               ><v-icon v-text="item.action"></v-icon
             ></v-list-item-icon>
@@ -65,6 +70,7 @@
 </template>
 
 <script>
+import firebase from "firebase"
 export default {
   name: "App",
 
@@ -74,6 +80,7 @@ export default {
     drawer: false,
     logo: require("@/assets/fast-food.svg"),
     singleItems: [
+      { action: "mdi-login", title: "LogIn", to: "Login" },
       {
         action: "mdi-floppy",
         title: "Rezept speichern",
@@ -93,8 +100,20 @@ export default {
       }
     ]
   }),
-  methods: {},
-  computed: {},
+  methods: {
+    logOut() {
+      firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+      }).catch(function(error) {
+        console.error("An error happened", error)
+      });
+    }
+  },
+  computed: {
+    user() {
+      return this.$store.getters.getUser;
+    }
+  },
   beforeMount() {
     this.$store.dispatch("getRecipes");
   }

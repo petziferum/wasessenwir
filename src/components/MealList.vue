@@ -12,8 +12,7 @@
         </v-progress-linear>
         Loading ...
       </template>
-      <v-list elevation="10">
-        <v-subheader>Rezepte</v-subheader>
+      <v-list elevation="0">
         <template v-for="n in items">
           <v-list-item
             link
@@ -44,7 +43,8 @@
             </v-list-item-content>
 
             <v-list-item-action>
-              <v-icon color="grey lighten-1">mdi-arrow-right</v-icon>
+
+              <v-icon color="accent">mdi-arrow-right-bold</v-icon>
             </v-list-item-action>
           </v-list-item>
           <v-divider :key="`${n.id}-d`"></v-divider>

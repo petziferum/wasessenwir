@@ -32,11 +32,21 @@ export default new Vuex.Store({
       state.loading = false;
     },
     loading(state, load) {
-      console.log("load", load);
       state.loading = load;
+    },
+    SET_USER(state, payload) {
+      console.log("autologin", payload)
+      state.user = payload
     }
   },
   actions: {
+    autoLogin({ commit }, user) {
+      commit("SET_USER", {
+        id: user.uid,
+        email: user.email,
+        fbKey:{},
+      })
+},
     createQuestion: ({ commit }) => {
       let inhalt = {
         id: "34",
@@ -50,7 +60,6 @@ export default new Vuex.Store({
     getRecipes({ commit, state }) {
       state.recipes = [];
       let payload = [];
-      console.log("loading", state.loading);
       commit("loading", true);
 
       //const storageRef = firebase.storage().ref();

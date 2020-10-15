@@ -18,13 +18,30 @@
     </v-row>
     <v-row justify="center">
       <v-col cols="11">
+        <v-toolbar color="accent">
+          <v-toolbar-title class="pa-2">Rezepte</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="getRecipes">
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </v-toolbar>
         <v-tabs v-model="tab">
-          <div class="pa-2">Rezepte</div>
-          <v-tab-item class="mt-0 pa-0 elevation-4">
+          <v-tab-item class="mt-0 pa-0">
             <List v-on:recipe="showRecipe" :items="recipes" />
           </v-tab-item>
           <v-tab-item>
-            <Recipe v-on:back="tab = 0" :recipe="activeRecipe"></Recipe>
+            <Recipe
+              v-on:back="tab = 0"
+              :recipe="activeRecipe"
+              v-on:editRecipe="editRecipe"
+            ></Recipe>
+          </v-tab-item>
+          <v-tab-item>
+            <edit-recipe
+              v-on:back="tab = 1"
+              v-on:home="tab = 0"
+              :recipe="activeRecipe"
+            ></edit-recipe>
           </v-tab-item>
         </v-tabs>
       </v-col>
@@ -36,11 +53,13 @@
 import List from "@/components/MealList";
 import Recipe from "@/components/Recipe";
 import firebase from "firebase";
+import EditReceipe from "@/views/EditReceipe";
 export default {
   name: "Home",
   components: {
     List: List,
-    Recipe: Recipe
+    Recipe: Recipe,
+    EditRecipe: EditReceipe
   },
   data: () => ({
     searchValue: "",
@@ -49,6 +68,9 @@ export default {
     images: ""
   }),
   methods: {
+    getRecipes() {
+      this.$store.dispatch("getRecipes");
+    },
     search(value) {
       console.info("Es wird nach", value.target[0].value, "gesucht");
     },
@@ -67,11 +89,21 @@ export default {
       this.tab = 1;
       console.info("recipe", n);
       this.searchValue = "";
+    },
+    editRecipe(n) {
+      this.activeRecipe = n;
+      this.tab = 2;
+      console.info("Rezept bearbeiten", n);
     }
   },
   computed: {
     recipes() {
-      return this.$store.getters.getRecipes;
+      return this.$store.getters.getRecipes.filter(recipes => {
+        return this.searchValue
+          .toLowerCase()
+          .split(" ")
+          .every(v => recipes.recipeName.toLowerCase().includes(v));
+      });
     },
     searchItem() {
       return this.$store.getters.getRecipes.filter(el => {
@@ -82,7 +114,6 @@ export default {
       });
     }
   },
-  beforeMount() {
-  }
+  beforeMount() {}
 };
 </script>
