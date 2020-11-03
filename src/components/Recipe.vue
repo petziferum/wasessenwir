@@ -29,9 +29,15 @@
             </v-list>
           </v-col>
           <v-col cols="12" sm="7" md="8">
-            <v-card-text class="headline">{{
-              recipe.recipeDescription
-            }}</v-card-text>
+            <v-card class="ma-2" color="white" v-for="step in recipe.recipeDescription" :key="step.nr">
+              <v-toolbar height="20px" elevation="1" color="secondary">
+                <div class="body-2 white--text">Schritt {{step.nr}}</div>
+              </v-toolbar>
+              <v-card-text>{{
+              step.text
+                }}
+              </v-card-text>
+            </v-card>
           </v-col>
         </v-row>
         <v-img

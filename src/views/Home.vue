@@ -67,6 +67,11 @@ export default {
     tab: 0,
     images: ""
   }),
+  watch: {
+    activeRecipe(val) {
+      console.info("aktiv: ", val.recipeName)
+    }
+  },
   methods: {
     getRecipes() {
       this.$store.dispatch("getRecipes");
@@ -93,7 +98,7 @@ export default {
     editRecipe(n) {
       this.activeRecipe = n;
       this.tab = 2;
-      console.info("Rezept bearbeiten", n);
+      console.info("Rezept bearbeiten", n.recipeName);
     }
   },
   computed: {

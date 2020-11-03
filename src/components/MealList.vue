@@ -27,7 +27,7 @@
             <v-list-item-content>
               <v-list-item-title>{{ n.recipeName }}</v-list-item-title>
               <v-list-item-subtitle>{{
-                n.recipeDescription
+                n.recipeDescription[0].text
               }}</v-list-item-subtitle>
               <v-list-item-subtitle class="mb-0">
                 <v-chip-group>

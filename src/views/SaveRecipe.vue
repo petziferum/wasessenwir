@@ -39,13 +39,32 @@
                     v-model="recipeName"
                     :rules="filled"
                   ></v-text-field>
-                  <v-textarea
-                    outlined
-                    label="Beschreibung"
-                    v-model="recipeDescription"
-                    :rules="filled"
-                  ></v-textarea>
+                  <v-sheet elevation="2" color="white" style="position:relative; z-index: 10;" class="px-3 pb-0 mb-14">
+                    <template v-for="(step, i) in steps">
+                      <v-textarea
+                        :key="i"
+                        height="100px"
+                        outlined
+                        :label="step.nr + '. Schritt'"
+                        v-model="step.text"
+                        :rules="filled"
+                        :append-icon="step.nr > 1 ?'mdi-minus':''"
+                        @click:append="deleteStep(i)"
+                      ></v-textarea>
+                    </template>
+                    <div width="100%" class="ma-0 pa-0 text-center">
+                      <v-btn
+                          style="position:relative; bottom: -36px; box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.3);"
+                          class="mx-auto rounded-b-pill"
+                          color="white"
+                          @click="addStep"
+                      ><v-icon>mdi-plus</v-icon></v-btn
+                      ><br />
+                    </div>
+                  </v-sheet>
+
                   <v-combobox
+                      class="mt-12"
                     label="Zutaten"
                     :items="ingredientItems"
                     v-model="ingredients"
@@ -73,21 +92,37 @@
                     </v-col>
                   </v-row>
 
-                  <v-btn :loading="loading" type="submit" block tile large elevation="5"
+                  <v-btn
+                    :loading="loading"
+                    type="submit"
+                    block
+                    tile
+                    large
+                    elevation="5"
                     >Speichern
                   </v-btn>
-                  <v-dialog persistent v-model="finishDialog" max-width="25em">
+                  <v-dialog
+                    persistent
+                    v-if="savedRecipe"
+                    v-model="finishDialog"
+                    max-width="25em"
+                  >
                     <v-card>
                       <v-card-title class="headline">
-                        Willst du das Rezept <br />"{{ recipeName }}" <br />
+                        Willst du das Rezept <br />"{{
+                          savedRecipe.recipeName
+                        }}" <br />
                         speichern?
                       </v-card-title>
                       <v-card-text
-                        ><p>
-                          {{ recipeDescription }}
+                        ><p
+                          v-for="step in savedRecipe.recipeDescription"
+                          :key="step.nr"
+                        >
+                          {{ step.text }}
                         </p>
-                        <p>{{ ingredients }}</p>
-                        <p>{{ filename }}</p>
+                        <p>{{ savedRecipe.ingredients }}</p>
+                        <p>{{ savedRecipe.filename }}</p>
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
@@ -123,6 +158,7 @@ export default {
   data: () => ({
     recipeName: "",
     ingredients: [],
+    steps: [{ nr: 1, text: "" }],
     ingredientItems: ["Hackfleisch", "Tomaten", "Salz", "Eier"],
     recipeDescription: "",
     imgsrc: "",
@@ -135,13 +171,34 @@ export default {
     finishDialog: false
   }),
   methods: {
+    addStep() {
+      if (this.steps.length <= 9) {
+        const x = { nr: this.steps.length + 1, text: "" };
+        this.steps.push(x);
+      }
+    },
+    deleteStep(n) {
+      if (this.steps.length > 1) {
+        this.steps.splice(n, 1);
+      }
+    },
     onPickFile() {
       this.$refs.fileInput.click();
     },
     openD() {
+      let saveR = {
+        recipeName: this.recipeName,
+        recipeDescription: this.steps,
+        imageName: this.filename,
+        imageSrc: "",
+        ingredients: this.ingredients,
+        time: Date.now()
+      };
+
       if (this.$refs.form.validate()) {
+        this.savedRecipe = saveR;
         this.finishDialog = true;
-        this.$store.commit("loading", true)
+        this.$store.commit("loading", true);
       }
     },
     logIn() {
@@ -164,16 +221,7 @@ export default {
     saveFile() {
       this.finishDialog = false;
       const file = this.image;
-
-
-      let input = {
-        recipeName: this.recipeName,
-        recipeDescription: this.recipeDescription,
-        imageName: this.filename,
-        imageSrc: "",
-        ingredients: this.ingredients,
-        time: Date.now()
-      };
+      let input = this.savedRecipe;
       //const metadata = { contentType: "image/jpeg" }
       if (this.$refs.form.validate()) {
         db.collection("recipes") //1. Verbindung zur Cloud Datenbank, um Dokument anzulegen
@@ -204,7 +252,7 @@ export default {
                   .doc(key)
                   .update({
                     imageSrc: URL // 8. Die URL zum Bild wird im gerade erstellten Dokument gespeichert, welches anhand des keys gefunden wird
-                  })
+                  });
               })
               .catch(error => {
                 console.error("Fehler: ", error);
@@ -280,7 +328,7 @@ export default {
     }
   },
   computed: {
-    loading()  {
+    loading() {
       return this.$store.getters.loading;
     },
     user() {
