@@ -14,7 +14,7 @@
         >Edit Recipe: {{ recipe.recipeName }} {{ imagePicker }}</v-card-title
       >
       <v-row>
-        <v-col>
+        <v-col cols="6">
           <v-card
             max-width="100px"
             max-height="100px"
@@ -23,22 +23,35 @@
             style="cursor:pointer;"
             link
             @click="getImages"
-            ><v-img v-if="recipe.imageSrc != ''" aspect-ratio="1" :src="recipe.imageSrc"></v-img
+            ><v-img
+              v-if="recipe.imageSrc != ''"
+              aspect-ratio="1"
+              :src="recipe.imageSrc"
+            ></v-img
             ><v-icon v-else large>mdi-pencil</v-icon></v-card
           >
         </v-col>
+        <v-col cols="6" style="border:1px solid;">
+          <image-upload v-on:uploaded="putImageOnRecipe"></image-upload>
+        </v-col>
       </v-row>
       <v-row v-if="imagePicker">
-        <v-col v-for="(img, i) in images" :key="i" cols="3" class="text-center">
-          <v-avatar
-            rounded
-            size="100px"
-            style="cursor: pointer"
+        <v-col
+          v-for="(img, i) in images"
+          :key="i"
+          cols="6"
+          sm="4"
+          md="4"
+          class="text-center"
+        >
+          <v-img
+            :src="img"
+            class="elevation-3"
             @click="putImageOnRecipe(img)"
-            class="mx-auto elevation-3"
-          >
-            <v-img :src="img" max-width="100px" max-height="100px"></v-img>
-          </v-avatar>
+            style="cursor: pointer"
+            max-width="100px"
+            max-height="100px"
+          ></v-img>
         </v-col>
       </v-row>
       <v-card-actions>
@@ -85,6 +98,7 @@
 <script>
 import db from "@/plugins/firebase";
 import firebase from "firebase";
+import ImageUpload from "@/components/ImageUpload";
 export default {
   name: "EditReceipe",
   props: {
@@ -92,6 +106,7 @@ export default {
       type: Object
     }
   },
+  components: { ImageUpload },
   data: () => ({
     imagePicker: false,
     images: []

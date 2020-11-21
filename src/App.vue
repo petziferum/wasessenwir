@@ -62,12 +62,14 @@ export default {
     logo: require("@/assets/fast-food.svg"),
     singleItems: [
       { action: "mdi-login", title: "LogIn", to: "Login" },
+      { action: "mdi-upload", title: "Image Upload", to: "/upload" },
       {
         action: "mdi-floppy",
         title: "Rezept speichern",
         to: "saveRecipe"
       },
-      { action: "mdi-food", title: "Abendessen", to: "/" }
+      { action: "mdi-food", title: "Abendessen", to: "/" },
+
     ]
   }),
   methods: {

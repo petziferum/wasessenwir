@@ -39,7 +39,12 @@
                     v-model="recipeName"
                     :rules="filled"
                   ></v-text-field>
-                  <v-sheet elevation="2" color="white" style="position:relative;" class="px-3 pb-0 mb-14">
+                  <v-sheet
+                    elevation="2"
+                    color="white"
+                    style="position:relative;"
+                    class="px-3 pb-0 mb-14"
+                  >
                     <template v-for="(step, i) in steps">
                       <v-textarea
                         :key="i"
@@ -48,23 +53,23 @@
                         :label="step.nr + '. Schritt'"
                         v-model="step.text"
                         :rules="filled"
-                        :append-icon="step.nr > 1 ?'mdi-minus':''"
+                        :append-icon="step.nr > 1 ? 'mdi-minus' : ''"
                         @click:append="deleteStep(i)"
                       ></v-textarea>
                     </template>
                     <div width="100%" class="ma-0 pa-0 text-center">
                       <v-btn
-                          style="position:relative; bottom: -36px; box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.3);"
-                          class="mx-auto rounded-b-pill"
-                          color="white"
-                          @click="addStep"
-                      ><v-icon>mdi-plus</v-icon></v-btn
+                        style="position:relative; bottom: -36px; box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.3);"
+                        class="mx-auto rounded-b-pill"
+                        color="white"
+                        @click="addStep"
+                        ><v-icon>mdi-plus</v-icon></v-btn
                       ><br />
                     </div>
                   </v-sheet>
 
                   <v-combobox
-                      class="mt-12"
+                    class="mt-12"
                     label="Zutaten"
                     :items="ingredientItems"
                     v-model="ingredients"
@@ -76,7 +81,7 @@
                     <v-col cols-12>
                       <v-btn outlined class="primary" @click="onPickFile" dark>
                         <v-icon left>mdi-camera-outline</v-icon>
-                        Bild
+                        Bild hochladen
                       </v-btn>
                       <input
                         class="caption ma-2"
