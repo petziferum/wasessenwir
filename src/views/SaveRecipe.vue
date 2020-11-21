@@ -39,7 +39,7 @@
                     v-model="recipeName"
                     :rules="filled"
                   ></v-text-field>
-                  <v-sheet elevation="2" color="white" style="position:relative; z-index: 10;" class="px-3 pb-0 mb-14">
+                  <v-sheet elevation="2" color="white" style="position:relative;" class="px-3 pb-0 mb-14">
                     <template v-for="(step, i) in steps">
                       <v-textarea
                         :key="i"

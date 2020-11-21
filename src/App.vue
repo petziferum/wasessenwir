@@ -41,29 +41,6 @@
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
-
-        <v-list-group
-          v-for="item in items"
-          :key="item.title"
-          v-model="item.active"
-          :prepend-icon="item.action"
-          no-action
-        >
-          <template v-slot:activator>
-            <v-list-item-content>
-              <v-list-item-title v-text="item.title"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-          <v-list-item
-            :to="child.to"
-            v-for="child in item.items"
-            :key="child.title"
-          >
-            <v-list-item-content>
-              <v-list-item-title v-text="child.title"></v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-group>
       </v-list>
     </v-navigation-drawer>
 
@@ -89,19 +66,8 @@ export default {
         action: "mdi-floppy",
         title: "Rezept speichern",
         to: "saveRecipe"
-      }
-    ],
-    items: [
-      {
-        action: "mdi-silverware-fork-knife",
-        active: false,
-        items: [
-          { title: "Abendessen", to: "/" },
-          { title: "New American", to: "/" },
-          { title: "Sushi", to: "/" }
-        ],
-        title: "Rezepte"
-      }
+      },
+      { action: "mdi-food", title: "Abendessen", to: "/" }
     ]
   }),
   methods: {

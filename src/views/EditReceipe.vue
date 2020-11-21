@@ -4,24 +4,74 @@
       <v-toolbar dense>
         <v-toolbar-items>
           <v-btn icon>
-            <v-icon @click="$emit('back')" color="accent">mdi-arrow-left-bold</v-icon>
+            <v-icon @click="$emit('back')" color="accent"
+              >mdi-arrow-left-bold</v-icon
+            >
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
-      <v-card-title>Edit Recipe: {{ recipe.recipeName }}</v-card-title>
+      <v-card-title
+        >Edit Recipe: {{ recipe.recipeName }} {{ imagePicker }}</v-card-title
+      >
+      <v-row>
+        <v-col>
+          <v-card
+            max-width="100px"
+            max-height="100px"
+            elevation="1"
+            class="text-center mb-4"
+            style="cursor:pointer;"
+            link
+            @click="getImages"
+            ><v-img v-if="recipe.imageSrc != ''" aspect-ratio="1" :src="recipe.imageSrc"></v-img
+            ><v-icon v-else large>mdi-pencil</v-icon></v-card
+          >
+        </v-col>
+      </v-row>
+      <v-row v-if="imagePicker">
+        <v-col v-for="(img, i) in images" :key="i" cols="3" class="text-center">
+          <v-avatar
+            rounded
+            size="100px"
+            style="cursor: pointer"
+            @click="putImageOnRecipe(img)"
+            class="mx-auto elevation-3"
+          >
+            <v-img :src="img" max-width="100px" max-height="100px"></v-img>
+          </v-avatar>
+        </v-col>
+      </v-row>
       <v-card-actions>
         <v-row>
           <v-col cols="12">
             <v-form ref="formContent" @submit.prevent="saveEditedContent">
-              <v-text-field label="Rezept Name" v-model="recipe.recipeName"></v-text-field>
+              <v-text-field
+                label="Rezept Name"
+                v-model="recipe.recipeName"
+              ></v-text-field>
               <v-sheet elevation="4" class="pa-3">
                 <template v-for="step in recipe.recipeDescription">
-                <v-textarea filled :label="'Schritt: ' + step.nr" v-model="step.text" :key="step.nr"
-              class="mb-0 mt-0 py-0"></v-textarea>
+                  <v-textarea
+                    filled
+                    :label="'Schritt: ' + step.nr"
+                    v-model="step.text"
+                    :key="step.nr"
+                    class="mb-0 mt-0 py-0"
+                  ></v-textarea>
                 </template>
               </v-sheet>
-              <div width="100%" style="border: 0px solid" class="ma-0 pa-0 text-center">
-              <v-btn elevation="4" class="mt-0 mx-auto rounded-b-pill" color="secondary" @click="addStep"><v-icon>mdi-plus</v-icon></v-btn><br>
+              <div
+                width="100%"
+                style="border: 0px solid"
+                class="ma-0 pa-0 text-center"
+              >
+                <v-btn
+                  elevation="4"
+                  class="mt-0 mx-auto rounded-b-pill"
+                  color="secondary"
+                  @click="addStep"
+                  ><v-icon>mdi-plus</v-icon></v-btn
+                ><br />
               </div>
               <v-btn type="submit">speichern</v-btn>
             </v-form>
@@ -34,6 +84,7 @@
 
 <script>
 import db from "@/plugins/firebase";
+import firebase from "firebase";
 export default {
   name: "EditReceipe",
   props: {
@@ -42,6 +93,8 @@ export default {
     }
   },
   data: () => ({
+    imagePicker: false,
+    images: []
   }),
   methods: {
     addStep() {
@@ -50,24 +103,46 @@ export default {
         this.recipe.recipeDescription.push(x);
       }
     },
+    getImages() {
+      this.imagePicker = true;
+      let storage = firebase.app().storage();
+      let storageRef = storage.ref();
+      let listRef = storageRef.child("recipes");
+      listRef.listAll().then(res => {
+        let image = [];
+        res.items.forEach(item => {
+          storageRef
+            .child(item.fullPath)
+            .getDownloadURL()
+            .then(url => {
+              image.push(url);
+            });
+        });
+        this.images = image;
+      });
+    },
+    putImageOnRecipe(img) {
+      this.recipe.imageSrc = img;
+      this.imagePicker = false;
+    },
     saveEditedContent() {
       db.collection("recipes")
         .doc(this.recipe.id)
         .update({
+          imageSrc: this.recipe.imageSrc,
           recipeName: this.recipe.recipeName,
           recipeDescription: this.recipe.recipeDescription
         })
         .then(() => {
           console.log("Document successfully updated!");
+          this.images = [];
           this.$store.dispatch("getRecipes");
-
         })
         .finally(() => {
           this.$emit("home");
         });
     }
   }
-
 };
 </script>
 
