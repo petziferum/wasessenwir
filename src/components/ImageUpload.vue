@@ -15,10 +15,10 @@
       @change="onFilePicked"
     />
     <template v-if="image">
-      <v-row justify="center">
+      <v-row >
         <v-col cols="12">
           <div height="100px">
-            <v-img aspect-ratio="1" contain :src="imgsrc"></v-img>
+            <v-img style="border:1px solid grey;" aspect-ratio="1" max-width="100px" contain :src="imgsrc"></v-img>
           </div>
           <span class="caption">{{ filename }}</span>
           <div>
@@ -49,7 +49,7 @@ export default {
     onFilePicked(event) {
       const files = event.target.files;
       this.filename = files[0].name;
-      if (this.filename.lastIndexOf(".png") <= 0) {
+      if (this.filename.lastIndexOf(".jpg") <= 0) {
         return alert("Falsch!");
       }
       const fileReader = new FileReader();

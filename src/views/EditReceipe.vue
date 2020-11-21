@@ -31,7 +31,7 @@
             ><v-icon v-else large>mdi-pencil</v-icon></v-card
           >
         </v-col>
-        <v-col cols="6" style="border:1px solid;">
+        <v-col cols="6" >
           <image-upload v-on:uploaded="putImageOnRecipe"></image-upload>
         </v-col>
       </v-row>
