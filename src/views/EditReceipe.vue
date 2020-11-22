@@ -11,7 +11,7 @@
         </v-toolbar-items>
       </v-toolbar>
       <v-card-title
-        >Edit Recipe: {{ recipe.recipeName }} {{ imagePicker }}</v-card-title
+        >Edit Recipe: {{ recipe.recipeName }}</v-card-title
       >
       <v-row>
         <v-col cols="6">
