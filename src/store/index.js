@@ -16,7 +16,52 @@ export default new Vuex.Store({
     meals: [],
     recipes: [],
     images: "",
-    user: null
+    user: null,
+    foodTable:{headers: [
+        {
+          text: "Menge",
+          align: "start",
+          value: "value",
+          width: "10%"
+        },
+        {
+          text: "Name",
+          align: "start",
+          sortable: true,
+          value: "name",
+          width: "20%"
+        },
+        {
+          text: "Kategorie",
+          align: "start",
+          sortable: true,
+          value: "category",
+          width: "20%"
+        },
+        {
+          text: "Beschreibung",
+          align: "start",
+          sortable: false,
+          value: "description",
+          width: "40%"
+        }
+      ],
+      items: [
+        {
+          name: "Bauernschinken",
+          category: "Fleisch",
+          value: 1,
+          description: "Der gräucherte, nicht der gegarte.",
+          status: null
+        },
+        {
+          name: "Apfel",
+          category: "Obst",
+          value: 4,
+          description: "",
+          status: null
+        }
+      ]}
   },
   mutations: {
     CREATE_QUESTION(state, payload) {

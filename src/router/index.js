@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Hello from "@/components/HelloWorld";
 import Home from "../views/Home.vue";
 import UploadImage from "@/views/UploadImage";
+import Inventar from "@/views/Inventar";
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes = [
     path: "/upload",
     name: "Upload",
     component: UploadImage
+  },
+  {
+    path: "/inventar",
+    name: "Inventar",
+    component: Inventar
   },
   {
     path: "/about",

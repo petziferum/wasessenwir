@@ -69,6 +69,7 @@ export default {
         to: "saveRecipe"
       },
       { action: "mdi-food", title: "Abendessen", to: "/" },
+      { action: "mdi-form-select", title: "Inventar", to: "/inventar" },
 
     ]
   }),
