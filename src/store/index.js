@@ -17,12 +17,13 @@ export default new Vuex.Store({
     recipes: [],
     images: "",
     user: null,
-    foodTable:{headers: [
+    foodTable: {
+      headers: [
         {
           text: "Menge",
           align: "start",
           value: "value",
-          width: "10%"
+          width: "8%"
         },
         {
           text: "Name",
@@ -44,24 +45,11 @@ export default new Vuex.Store({
           sortable: false,
           value: "description",
           width: "40%"
-        }
-      ],
-      items: [
-        {
-          name: "Bauernschinken",
-          category: "Fleisch",
-          value: 1,
-          description: "Der gräucherte, nicht der gegarte.",
-          status: null
         },
-        {
-          name: "Apfel",
-          category: "Obst",
-          value: 4,
-          description: "",
-          status: null
-        }
-      ]}
+        { text: "Actions", value: "actions", sortable: false }
+      ],
+      items: []
+    }
   },
   mutations: {
     CREATE_QUESTION(state, payload) {
@@ -80,7 +68,13 @@ export default new Vuex.Store({
       state.loading = load;
     },
     SET_USER(state, payload) {
-      state.user = payload
+      state.user = payload;
+    },
+    addInventoryItem(state, payload) {
+      state.foodTable.items.push(payload);
+    },
+    deleteItem(state, id) {
+      console.log(id, "wird gelöscht");
     }
   },
   actions: {
@@ -88,9 +82,19 @@ export default new Vuex.Store({
       commit("SET_USER", {
         id: user.uid,
         email: user.email,
-        fbKey:{},
-      })
-},
+        fbKey: {}
+      });
+    },
+    saveLebensmittel({ commit, dispatch }, payload) {
+      console.log(payload);
+      db.collection("inventory")
+        .add(payload)
+        .then(res => {
+          payload.id = res.id;
+          commit("addInventoryItem", payload);
+          dispatch("getInventory");
+        });
+    },
     createQuestion: ({ commit }) => {
       let inhalt = {
         id: "34",
@@ -100,6 +104,28 @@ export default new Vuex.Store({
         isScalable: false
       };
       commit("CREATE_QUESTION", inhalt);
+    },
+    getInventory({ commit, state }) {
+      state.foodTable.items = [];
+      db.collection("inventory")
+        .get()
+        .then(response => {
+          console.log("response", response);
+          response.forEach(el => {
+            let item = el.data();
+            item.id = el.id;
+            commit("addInventoryItem", item);
+          });
+        });
+    },
+    deleteInventoryItem({ commit, dispatch }, id) {
+      db.collection("inventory")
+        .doc(id)
+        .delete()
+        .then(() => {
+          commit("deleteItem", id);
+        })
+        .finally(() => dispatch("getInventory"));
     },
     getRecipes({ commit, state }) {
       state.recipes = [];
