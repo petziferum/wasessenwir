@@ -110,7 +110,6 @@
         </v-data-table>
       </v-col>
     </v-row>
-    {{ foodTable.items }}
   </v-container>
 </template>
 

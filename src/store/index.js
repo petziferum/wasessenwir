@@ -110,7 +110,6 @@ export default new Vuex.Store({
       db.collection("inventory")
         .get()
         .then(response => {
-          console.log("response", response);
           response.forEach(el => {
             let item = el.data();
             item.id = el.id;
