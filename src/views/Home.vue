@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row justify="center">
-      <v-col cols="11" lg="6">
+      <v-col cols="12" lg="6">
         <v-card>
           <div class="pa-2">
             <v-form ref="searchForm" @submit.prevent="search">
@@ -17,7 +17,7 @@
       </v-col>
     </v-row>
     <v-row justify="center">
-      <v-col cols="11">
+      <v-col cols="12">
         <v-toolbar color="accent">
           <v-toolbar-title class="pa-2">Rezepte</v-toolbar-title>
           <v-spacer></v-spacer>
