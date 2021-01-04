@@ -4,6 +4,7 @@ import Question from "../components/models/question";
 import Meal from "../components/models/Meal";
 import MealData from "./data/Meals";
 import db from "@/plugins/firebase";
+import firebase from "firebase";
 //import firebase from "firebase";
 
 Vue.use(Vuex);
@@ -16,6 +17,7 @@ export default new Vuex.Store({
     meals: [],
     recipes: [],
     images: "",
+    gallerie: [],
     user: null,
     foodTable: {
       headers: [
@@ -52,6 +54,10 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    SET_GALLERIE(state,payload){
+      console.log("payload images", payload)
+      state.gallerie = payload
+    },
     CREATE_QUESTION(state, payload) {
       console.info(payload);
       const newQuestion = new Question.createQuestion(payload);
@@ -78,6 +84,24 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    loadImages({ commit }) {
+      let storage = firebase.app().storage();
+      let storageRef = storage.ref();
+      let listRef = storageRef.child("recipes");
+      listRef.listAll().then(res => {
+        let image = [];
+        console.log("Bilder laden...", res)
+        res.items.forEach(item => {
+          storageRef
+            .child(item.fullPath)
+            .getDownloadURL()
+            .then(url => {
+              image.push(url);
+            });
+        });
+        commit("SET_GALLERIE", image)
+      });
+    },
     autoLogin({ commit }, user) {
       commit("SET_USER", {
         id: user.uid,

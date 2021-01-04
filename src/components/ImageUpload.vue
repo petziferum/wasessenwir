@@ -1,32 +1,38 @@
 <template>
-  <v-container>
-    <v-hover v-slot="{ hover }">
-      <v-btn :elevation="hover ? 6 : 1" @click="onPickFile"
-        >Datei <br />auswählen</v-btn
-      ></v-hover
-    >
-    <input
-      class="caption ma-2"
-      v-show="false"
-      contenteditable="false"
-      type="file"
-      prepend-icon="mdi-camera"
-      ref="fileInput"
-      @change="onFilePicked"
-    />
-    <template v-if="image">
-      <v-row >
-        <v-col cols="12">
-          <div height="100px">
-            <v-img style="border:1px solid grey;" aspect-ratio="1" max-width="100px" contain :src="imgsrc"></v-img>
-          </div>
-          <span class="caption">{{ filename }}</span>
-          <div>
-            <v-btn @click="uploadImage">Upload</v-btn>
-          </div>
-        </v-col>
-      </v-row>
-    </template>
+  <v-container fluid>
+    <v-row style="border: 1px  solid;">
+      <v-col cols="2" >
+        <v-hover v-slot="{ hover }">
+          <v-btn :elevation="hover ? 6 : 1" @click="onPickFile"
+          >Datei <br />auswählen</v-btn
+          ></v-hover
+        >
+      </v-col>
+      <v-col cols="3">
+        <input
+            class="caption ma-2"
+            v-show="false"
+            contenteditable="false"
+            type="file"
+            prepend-icon="mdi-camera"
+            ref="fileInput"
+            @change="onFilePicked"
+        />
+        <template v-if="image">
+          <v-row >
+            <v-col cols="12">
+              <div height="100px">
+                <v-img style="border:1px solid grey;" aspect-ratio="1" max-width="100px" contain :src="imgsrc"></v-img>
+              </div>
+              <span class="caption">{{ filename }}</span>
+              <div>
+                <v-btn @click="uploadImage">Upload</v-btn>
+              </div>
+            </v-col>
+          </v-row>
+        </template>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
