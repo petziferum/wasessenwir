@@ -14,7 +14,12 @@ export default class Meal {
     this._level = level;
   }
   static createNewMeal(obj = undefined) {
+    function createName() {
+      const nameId = obj.name + obj.id;
+      return nameId
+    }
     return new Meal(
+        createName(),
       obj.name,
       obj.description,
       obj.ingredients,
