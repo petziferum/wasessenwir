@@ -92,7 +92,7 @@ export default {
     }
   },
   beforeMount() {
-    this.$store.dispatch("getRecipes");
+    //this.$store.dispatch("getRecipes");
   }
 };
 </script>

@@ -26,7 +26,9 @@
       </template>
       <template v-else>
         <v-col cols="3">
-          <v-alert icon="mdi-alert" colored-border border="top" color="success">Du bist bereits eingelogged</v-alert>
+          <v-alert icon="mdi-alert" colored-border border="top" color="success"
+            >Du bist bereits eingelogged</v-alert
+          >
           <p></p>
           <v-btn to="/" text>Zurück</v-btn>
         </v-col>
@@ -45,6 +47,7 @@ export default {
     password: ""
   }),
   methods: {
+
     logIn() {
       firebase
         .auth()

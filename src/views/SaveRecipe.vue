@@ -98,7 +98,7 @@
                   </v-row>
 
                   <v-btn
-                    :loading="loading"
+
                     type="submit"
                     block
                     tile
@@ -155,7 +155,7 @@
 </template>
 
 <script>
-import db from "@/plugins/firebase";
+import { firestore,fireBucket } from "@/plugins/firebase";
 import * as firebase from "firebase";
 
 export default {
@@ -229,7 +229,7 @@ export default {
       let input = this.savedRecipe;
       //const metadata = { contentType: "image/jpeg" }
       if (this.$refs.form.validate()) {
-        db.collection("recipes") //1. Verbindung zur Cloud Datenbank, um Dokument anzulegen
+        firestore.collection("recipes")//1. Verbindung zur Cloud Datenbank, um Dokument anzulegen
           .add(input)
           .then(res => {
             let key = res.id; //2. Die ID des neuen Dokuments wird in "key" gespeichert
@@ -238,8 +238,7 @@ export default {
           .then(key => {
             let ext = input.imageName.slice(input.imageName.lastIndexOf(".")); // 4. Dateiname wird erstellt
 
-            return firebase // 5. Verbindung mit dem Firebase Storage wird hergestellt in dem Pfad "recipes/"
-              .storage()
+            return fireBucket // 5. Verbindung mit dem Firebase Storage wird hergestellt in dem Pfad "recipes/"
               .ref("recipes/" + key + ext)
               .put(file)
               .then(fileData => {
@@ -252,7 +251,7 @@ export default {
               .then(URL => {
                 console.log("hochgeladen", URL);
                 this.imgsrc = URL;
-                return db
+                return firestore
                   .collection("recipes")
                   .doc(key)
                   .update({
@@ -260,14 +259,16 @@ export default {
                   });
               })
               .catch(error => {
-                console.error("Fehler: ", error);
+                console.error("Fehler im update: ", error);
               });
           })
           .then(() => {
             this.finishDialog = false;
             this.$refs.form.reset();
             this.$router.push("/");
-          })
+          }).catch(err=> {
+            console.log("fehler am ende", err)
+        })
           .finally(() => {
             this.$store.dispatch("getRecipes");
           });
@@ -282,7 +283,7 @@ export default {
       let imgsrc;
       let key;
       let ext;
-      db.collection("recipes")
+      firestore.collection("recipes")
         .doc("recipe-" + this.recipeName)
         .set(input)
         .then(data => {
@@ -301,7 +302,7 @@ export default {
         .then(URL => {
           imgsrc = URL;
           console.log(imgsrc);
-          return db
+          return firestore
             .collection("recipes")
             .child(key)
             .update({ imgsrc: imgsrc });
@@ -321,7 +322,7 @@ export default {
     onFilePicked(event) {
       const files = event.target.files;
       this.filename = files[0].name;
-      if (this.filename.lastIndexOf(".jpg") <= 0) {
+      if (this.filename.lastIndexOf(".png") <= 0) {
         return alert("Falsch!");
       }
       const fileReader = new FileReader();

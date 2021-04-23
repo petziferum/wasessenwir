@@ -3,9 +3,7 @@ import Vuex from "vuex";
 import Question from "../components/models/question";
 import Meal from "../components/models/Meal";
 import MealData from "./data/Meals";
-import db from "@/plugins/firebase";
-import firebase from "firebase";
-//import firebase from "firebase";
+import {firestore, fireBucket} from "@/plugins/firebase";
 
 Vue.use(Vuex);
 
@@ -85,7 +83,7 @@ export default new Vuex.Store({
   },
   actions: {
     loadImages({ commit }) {
-      let storage = firebase.app().storage();
+      let storage = fireBucket
       let storageRef = storage.ref();
       let listRef = storageRef.child("recipes");
       listRef.listAll().then(res => {
@@ -111,7 +109,7 @@ export default new Vuex.Store({
     },
     saveLebensmittel({ commit, dispatch }, payload) {
       console.log(payload);
-      db.collection("inventory")
+      firestore.collection("inventory")
         .add(payload)
         .then(res => {
           payload.id = res.id;
@@ -131,7 +129,7 @@ export default new Vuex.Store({
     },
     getInventory({ commit, state }) {
       state.foodTable.items = [];
-      db.collection("inventory")
+      firestore.collection("inventory")
         .get()
         .then(response => {
           response.forEach(el => {
@@ -142,7 +140,7 @@ export default new Vuex.Store({
         });
     },
     deleteInventoryItem({ commit, dispatch }, id) {
-      db.collection("inventory")
+      firestore.collection("inventory")
         .doc(id)
         .delete()
         .then(() => {
@@ -157,7 +155,7 @@ export default new Vuex.Store({
 
       //const storageRef = firebase.storage().ref();
       //const imageRef = storageRef.child("recipes");
-      db.collection("recipes")
+      firestore.collection("recipes")
         .get()
         .then(res => {
           res.forEach(el => {

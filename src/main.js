@@ -16,6 +16,8 @@ new Vue({
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.$store.dispatch("autoLogin", user)
+      } else {
+        console.log("Not Signed in.")
       }
     })
   }

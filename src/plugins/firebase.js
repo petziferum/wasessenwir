@@ -1,15 +1,21 @@
 import firebase from "firebase";
+import "firebase/firestore";
+import "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAQrUZ44HnkaVksAqUs4G79TiaG1Ejwiw0",
-  authDomain: "documentation-dfdb2.firebaseapp.com",
-  databaseURL: "https://documentation-dfdb2.firebaseio.com",
-  projectId: "documentation-dfdb2",
-  storageBucket: "documentation-dfdb2.appspot.com",
-  messagingSenderId: "644597680458",
-  appId: "1:644597680458:web:b26f46fb441a0a55b799b3",
-  measurementId: "G-Y9ZR7M799S"
+  apiKey: "AIzaSyCPt03Bp5UBVXn72EVSWNAhvt4u0NI2m5M",
+  authDomain: "recipes-petzi.firebaseapp.com",
+  projectId: "recipes-petzi",
+  storageBucket: "recipes-petzi.appspot.com",
+  messagingSenderId: "214936827568",
+  appId: "1:214936827568:web:345c47274d065fe45c6d75",
+  measurementId: "G-15T3BLM6BP"
 };
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
-export default firebaseApp.firestore();
+const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+const fireBucket = firebase.storage();
+const fireAuth = firebase.auth()
+const firestore = firebase.firestore();
+export { timestamp, fireAuth, fireBucket, firestore }
+export default firebaseApp;
