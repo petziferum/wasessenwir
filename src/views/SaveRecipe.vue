@@ -38,15 +38,35 @@
                     label="Rezept Name"
                     v-model="recipeName"
                     :rules="filled"
+                    filled
                   ></v-text-field>
+                  <v-sheet>
+                    <v-card-title>Zutaten</v-card-title>
+                    <v-list>
+                      <v-list-item v-for="item in ingredients" :key="item.nr">
+                        <v-list-item-title class="body-2">{{ item }}</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                    <v-text-field
+                      prepend-icon="mdi-tag-plus"
+                      placeholder="Zutat"
+                      class="textfieldappear"
+                    >
+                      <template v-slot:append-outer>
+                        <v-btn rounded @click="addIngredient"
+                          ><v-icon>mdi-plus</v-icon></v-btn
+                        >
+                      </template>
+                    </v-text-field>
+                  </v-sheet>
                   <v-sheet
                     elevation="2"
-                    color="white"
                     style="position:relative;"
-                    class="px-3 pb-0 mb-14"
+                    class="stepsheet pa-3 pb-0 mb-14"
                   >
                     <template v-for="(step, i) in steps">
                       <v-textarea
+                        background-color="white"
                         :key="i"
                         height="100px"
                         outlined
@@ -97,13 +117,7 @@
                     </v-col>
                   </v-row>
 
-                  <v-btn
-
-                    type="submit"
-                    block
-                    tile
-                    large
-                    elevation="5"
+                  <v-btn type="submit" block tile large elevation="5"
                     >Speichern
                   </v-btn>
                   <v-dialog
@@ -155,16 +169,21 @@
 </template>
 
 <script>
-import { firestore,fireBucket } from "@/plugins/firebase";
+import { firestore, fireBucket } from "@/plugins/firebase";
 import * as firebase from "firebase";
 
 export default {
   name: "SaveRecipe",
   data: () => ({
     recipeName: "",
-    ingredients: [],
+    ingredients: [{ nr: 1, name: "Zutat 1" }],
     steps: [{ nr: 1, text: "" }],
-    ingredientItems: ["Hackfleisch", "Tomaten", "Salz", "Eier"],
+    ingredientItems: [
+      { nr: 1, name: "Zutat 1" },
+      { nr: 2, name: "Hackfleisch" },
+      { nr: 3, name: "Tomaten" },
+      { nr: 3, name: "Eier" }
+    ],
     recipeDescription: "",
     imgsrc: "",
     password: "",
@@ -176,6 +195,9 @@ export default {
     finishDialog: false
   }),
   methods: {
+    addIngredient() {
+      console.log("add ingredient");
+    },
     addStep() {
       if (this.steps.length <= 9) {
         const x = { nr: this.steps.length + 1, text: "" };
@@ -229,7 +251,8 @@ export default {
       let input = this.savedRecipe;
       //const metadata = { contentType: "image/jpeg" }
       if (this.$refs.form.validate()) {
-        firestore.collection("recipes")//1. Verbindung zur Cloud Datenbank, um Dokument anzulegen
+        firestore
+          .collection("recipes") //1. Verbindung zur Cloud Datenbank, um Dokument anzulegen
           .add(input)
           .then(res => {
             let key = res.id; //2. Die ID des neuen Dokuments wird in "key" gespeichert
@@ -266,9 +289,10 @@ export default {
             this.finishDialog = false;
             this.$refs.form.reset();
             this.$router.push("/");
-          }).catch(err=> {
-            console.log("fehler am ende", err)
-        })
+          })
+          .catch(err => {
+            console.log("fehler am ende", err);
+          })
           .finally(() => {
             this.$store.dispatch("getRecipes");
           });
@@ -283,7 +307,8 @@ export default {
       let imgsrc;
       let key;
       let ext;
-      firestore.collection("recipes")
+      firestore
+        .collection("recipes")
         .doc("recipe-" + this.recipeName)
         .set(input)
         .then(data => {
@@ -345,4 +370,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.stepsheet {
+  background-color: blanchedalmond;
+}
+.textfieldappear {
+  width: 300px;
+  fill: khaki;
+}
+</style>
