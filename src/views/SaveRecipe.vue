@@ -25,7 +25,7 @@
     </template>
     <template v-else>
       <v-col>
-        <v-card class="my-2">
+        <v-card tile class="my-2">
           <v-card-title> Save New Recipe </v-card-title>
           <v-card-subtitle>
             {{ user.email }}
@@ -40,25 +40,72 @@
                     :rules="filled"
                     filled
                   ></v-text-field>
+
                   <v-sheet>
-                    <v-card-title>Zutaten</v-card-title>
-                    <v-list>
-                      <v-list-item v-for="item in ingredients" :key="item.nr">
-                        <v-list-item-title class="body-2">{{ item }}</v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                    <v-text-field
-                      prepend-icon="mdi-tag-plus"
-                      placeholder="Zutat"
-                      class="textfieldappear"
-                    >
-                      <template v-slot:append-outer>
-                        <v-btn rounded @click="addIngredient"
-                          ><v-icon>mdi-plus</v-icon></v-btn
-                        >
-                      </template>
-                    </v-text-field>
+                    <v-row>
+                      <v-col cols="12">
+                        <v-card-title>Zutaten</v-card-title>
+                      </v-col>
+                    </v-row>
+                    <v-row align="end">
+                      <v-col cols="6">
+                        <v-list dense>
+                          <transition-group name="slide">
+                            <template v-for="(item, i) in ingredients">
+                              <v-divider
+                                v-if="i !== 0"
+                                :key="`${i}-divider`"
+                              ></v-divider>
+                              <v-list-item class="slide" :key="item.nr">
+                                <v-list-item-title>
+                                  <v-row>
+                                    <v-col cols="3">
+                                      {{ item.menge }}
+                                    </v-col>
+                                    <v-col cols="9">
+                                      {{ item.name }}
+                                    </v-col>
+                                  </v-row>
+                                </v-list-item-title>
+                              </v-list-item>
+                            </template>
+                          </transition-group>
+                        </v-list>
+                      </v-col>
+                      <v-col cols="6">
+                        <v-form @submit.prevent="addIngredient" ref="zutatForm">
+                          <v-row no-gutters>
+                            <v-col cols="1">
+                              <v-icon left>mdi-tag-plus</v-icon>
+                            </v-col>
+                            <v-col cols="3">
+                              <v-text-field
+                                outlined
+                                label="Menge"
+                                style="width: 100px"
+                                name="menge"
+                              ></v-text-field>
+                            </v-col>
+                            <v-col cols="8">
+                              <v-text-field
+                                outlined
+                                class="mx-2"
+                                name="name"
+                                placeholder="Zutat"
+                              >
+                                <template v-slot:append-outer>
+                                  <v-btn rounded type="submit"
+                                    ><v-icon>mdi-plus</v-icon></v-btn
+                                  >
+                                </template>
+                              </v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-form>
+                      </v-col>
+                    </v-row>
                   </v-sheet>
+
                   <v-sheet
                     elevation="2"
                     style="position:relative;"
@@ -176,7 +223,7 @@ export default {
   name: "SaveRecipe",
   data: () => ({
     recipeName: "",
-    ingredients: [{ nr: 1, name: "Zutat 1" }],
+    ingredients: [{ nr: 1, menge: "500g", name: "Zutat 1" }],
     steps: [{ nr: 1, text: "" }],
     ingredientItems: [
       { nr: 1, name: "Zutat 1" },
@@ -195,8 +242,17 @@ export default {
     finishDialog: false
   }),
   methods: {
-    addIngredient() {
-      console.log("add ingredient");
+    addIngredient(event) {
+      console.log(event);
+      const newItem = {
+        nr: this.ingredients.length + 1,
+        menge: event.target.menge.value,
+        name: event.target.name.value
+      };
+
+      console.log("add ingredient", newItem);
+      this.ingredients.push(newItem);
+      this.$refs.zutatForm.reset();
     },
     addStep() {
       if (this.steps.length <= 9) {
@@ -374,8 +430,45 @@ export default {
 .stepsheet {
   background-color: blanchedalmond;
 }
+.slide-enter-active {
+  animation: slide-in ease-in-out 3s;
+}
+.slide-enter {
+  height: 0;
+  transform: rotateX(24deg);
+}
+.slide {
+
+}
 .textfieldappear {
   width: 300px;
   fill: khaki;
+}
+.textfields {
+  display: inline-block;
+  margin: 0px;
+}
+.listitem {
+  postition: absolut;
+  background-color: indigo;
+  color: wheat;
+  width: 50%;
+}
+@keyframes slide-in {
+  0% {
+    transform: translateX(450px) translateY(-30px) scale(0.6);
+    opacity: 0.1;
+  }
+  30% {
+    opacity: 0.4;
+    transform: scale(2) translateX(50px);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: translateX(0) scaleY(1);
+    opacity: 1;
+  }
 }
 </style>
