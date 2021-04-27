@@ -296,6 +296,7 @@ export default {
         imageName: this.filename,
         imageSrc: "",
         ingredients: this.ingredients,
+        createdBy: this.user,
         time: Date.now()
       };
 
@@ -453,7 +454,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .stepsheet {
   background-color: blanchedalmond;
 }

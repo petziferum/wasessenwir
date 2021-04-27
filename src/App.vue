@@ -44,7 +44,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-content class="bg">
+    <v-content class="bg px-0 mx-0">
       <router-view />
     </v-content>
   </v-app>
@@ -99,6 +99,6 @@ export default {
 
 <style>
 .bg {
-  background-color: #ff7e00;
+  background-color: #80d6ff;
 }
 </style>
