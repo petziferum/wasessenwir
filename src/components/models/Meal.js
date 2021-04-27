@@ -1,46 +1,76 @@
 export default class Meal {
-  static _id=0;
-  constructor(
-    name = undefined,
-    description = undefined,
-    ingredients = undefined,
-    level = undefined
-  ) {
-    Meal._id++;
-    this._id = Meal._id;
-    this._name = name;
-    this._description = description;
-    this._ingredients = ingredients;
-    this._level = level;
-  }
+
+
+  constructor() { }
+
   static createNewMeal(obj = undefined) {
-    function createName() {
-      const nameId = obj.name + obj.id;
-      return nameId
-    }
-    return new Meal(
-        createName(),
-      obj.name,
-      obj.description,
-      obj.ingredients,
-      obj.level
+    let NewMeal = new Meal(
     );
+    NewMeal._recipeDescription = obj.recipeDescription;
+    NewMeal._imageName = obj.imageName;
+    NewMeal._imageSrc = obj.imageSrc;
+    NewMeal._recipeName = obj.recipeName;
+    NewMeal._ingredients = obj.ingredients;
+    NewMeal._time = obj.time;
+    NewMeal.id = obj.id;
+
+    return NewMeal
   }
 
-  get name() {
-    return this._name;
+
+  get id() {
+    return this._id;
+  }
+set id(value) {
+    this._id = value;
+}
+
+  get nameId() {
+    return this._nameId;
   }
 
-  set name(value) {
-    this._name = value;
+  set nameId(value) {
+    this._nameId = value;
   }
 
-  get description() {
-    return this._description;
+  get imageSrc() {
+    return this._imageSrc;
   }
 
-  set description(value) {
-    this._description = value;
+  set imageSrc(value) {
+    this._imageSrc = value;
+  }
+
+  get imageName() {
+    return this._imageName;
+  }
+
+  set imageName(value) {
+    this._imageName = value;
+  }
+
+  get time() {
+    return this._time;
+  }
+
+  set time(value) {
+    this._time = value;
+  }
+
+  get recipeName() {
+    return this._recipeName;
+  }
+
+  set recipeName(value) {
+    this._recipeName = value;
+  }
+
+  get recipeDescription() {
+    return this._recipeDescription;
+  }
+
+  set recipeDescription(value) {
+    this._recipeDescription = value;
   }
 
   get ingredients() {

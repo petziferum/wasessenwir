@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center">
     <template v-if="user === null">
-      <v-col cols="12" sm="6" md="4" lg="3" class="text-center">
+      <v-col cols="12" sm="6" md="4" lg="3" xl="3" class="text-center">
         <v-card>
           <v-card-title>Login</v-card-title>
           <v-card-text>
@@ -24,7 +24,7 @@
       </v-col>
     </template>
     <template v-else>
-      <v-col>
+      <v-col cols="12">
         <v-card tile class="my-2">
           <v-card-title> Save New Recipe </v-card-title>
           <v-card-subtitle>
@@ -42,14 +42,15 @@
                   ></v-text-field>
 
                   <v-sheet>
-                    <v-row>
-                      <v-col cols="12">
-                        <v-card-title>Zutaten</v-card-title>
-                      </v-col>
-                    </v-row>
                     <v-row align="end">
                       <v-col cols="6">
-                        <v-list dense>
+                        <div class="headline">Zutaten</div>
+                        <v-list>
+                          <v-row>
+                            <v-col cols="3"><b>Menge</b></v-col>
+                           <v-col cols="9"><b>Zutat</b></v-col>
+                          </v-row>
+                          <v-divider></v-divider>
                           <transition-group name="slide">
                             <template v-for="(item, i) in ingredients">
                               <v-divider
@@ -134,16 +135,6 @@
                       ><br />
                     </div>
                   </v-sheet>
-
-                  <v-combobox
-                    class="mt-12"
-                    label="Zutaten"
-                    :items="ingredientItems"
-                    v-model="ingredients"
-                    chips
-                    outlined
-                    multiple
-                  ></v-combobox>
                   <v-row>
                     <v-col cols-12>
                       <v-btn outlined class="primary" @click="onPickFile" dark>
@@ -211,6 +202,30 @@
           </v-card-actions>
         </v-card>
       </v-col>
+      <v-row justify="center">
+        <v-col cols="10">
+          Rezepte:<br />
+          <v-btn @click="getofflinemeals">get rezepte</v-btn>
+          <v-btn @click="getonlinerecipes">online rezepte</v-btn>
+          <v-list three-line>
+            <v-list-item v-for="r in offlinemeals" :key="r.nameId">
+              <v-list-item-avatar>
+                <v-img :src="r.imageSrc"></v-img>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>{{ r.recipeName }}</v-list-item-title>
+                <v-list-item-subtitle
+                  >ingredients: {{ r.ingredients }}</v-list-item-subtitle
+                >
+                <v-list-item-subtitle
+                  >description: {{ r.recipeDescription }}</v-list-item-subtitle
+                >
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+          {{ onlineRecipes }}
+        </v-col>
+      </v-row>
     </template>
   </v-row>
 </template>
@@ -223,7 +238,7 @@ export default {
   name: "SaveRecipe",
   data: () => ({
     recipeName: "",
-    ingredients: [{ nr: 1, menge: "500g", name: "Zutat 1" }],
+    ingredients: [],
     steps: [{ nr: 1, text: "" }],
     ingredientItems: [
       { nr: 1, name: "Zutat 1" },
@@ -242,6 +257,12 @@ export default {
     finishDialog: false
   }),
   methods: {
+    getonlinerecipes() {
+      this.$store.dispatch("getRecipes");
+    },
+    getofflinemeals() {
+      this.$store.dispatch("loadmealdata");
+    },
     addIngredient(event) {
       console.log(event);
       const newItem = {
@@ -415,6 +436,12 @@ export default {
     }
   },
   computed: {
+    onlineRecipes() {
+      return this.$store.getters.getRecipes;
+    },
+    offlinemeals() {
+      return this.$store.getters.getofflinemeals;
+    },
     loading() {
       return this.$store.getters.loading;
     },
@@ -438,7 +465,6 @@ export default {
   transform: rotateX(24deg);
 }
 .slide {
-
 }
 .textfieldappear {
   width: 300px;
