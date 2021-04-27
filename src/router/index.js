@@ -14,9 +14,20 @@ const routes = [
     component: Home
   },
   {
-    path: "/recipe",
+    path: "/recipe/",
     name: "Recipe",
-    component: Hello
+    component: Hello,
+    children: [
+      {
+        path: "",
+        name: "recipeHome"
+      },
+      {
+        path: ":recipe_id",
+        name: "recipeId",
+        component: () => import("@/components/Recipe")
+      }
+    ]
   },
   {
     path: "/upload",

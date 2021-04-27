@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="pa-0">
-    <v-row no-gutters>
+    <v-row no-gutters style="border-bottom: solid 4px white;">
       <v-img
         :src="require('../assets/textlogo.svg')"
         class="my-0 pa-0"
@@ -43,7 +43,7 @@
         v-for="rez in recipes"
         :key="rez.id"
       >
-        <v-card style="cursor: pointer" to="/recipe">
+        <v-card style="cursor: pointer" :to="/recipe/ + rez.id">
           <v-card-title>{{ rez.recipeName }}</v-card-title>
           <v-img :src="rez.imageSrc" max-height="200"></v-img>
         </v-card>
