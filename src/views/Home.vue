@@ -33,12 +33,13 @@
         </v-skeleton-loader>
       </v-col>
     </v-row>
-    <v-row :justify="$vuetify.breakpoint.smAndDown ? 'center' : 'start'">
+    <v-row class="ma-5" :justify="$vuetify.breakpoint.smAndDown ? 'center' : 'start'">
       <v-col
         cols="12"
-        sm="8"
+        sm="6"
         md="6"
         lg="4"
+        xl="3"
         v-for="rez in recipes"
         :key="rez.id"
       >

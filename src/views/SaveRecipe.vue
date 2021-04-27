@@ -43,12 +43,12 @@
 
                   <v-sheet>
                     <v-row align="end">
-                      <v-col cols="6">
+                      <v-col cols="12" md="6">
                         <div class="headline">Zutaten</div>
                         <v-list>
                           <v-row>
-                            <v-col cols="3"><b>Menge</b></v-col>
-                           <v-col cols="9"><b>Zutat</b></v-col>
+                            <v-col cols="4"><b>Menge</b></v-col>
+                           <v-col cols="8"><b>Zutat</b></v-col>
                           </v-row>
                           <v-divider></v-divider>
                           <transition-group name="slide">
@@ -73,7 +73,7 @@
                           </transition-group>
                         </v-list>
                       </v-col>
-                      <v-col cols="6">
+                      <v-col cols="12" md="6">
                         <v-form @submit.prevent="addIngredient" ref="zutatForm">
                           <v-row no-gutters>
                             <v-col cols="1">
