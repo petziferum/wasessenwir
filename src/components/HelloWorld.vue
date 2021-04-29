@@ -1,8 +1,12 @@
 <template>
   <v-row no-gutters>
     <v-col>
-      <v-toolbar class="pa-3">
-      <v-btn @click="$router.back()">Zurück</v-btn>
+      <v-toolbar height="100%">
+      <v-btn  color="primary"  fab @click="$router.back()">
+
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+        <div class="mx-auto" color="black">{{recipeId}}</div>
       </v-toolbar>
       <router-view></router-view>
     </v-col>
@@ -12,6 +16,9 @@
 <script>
 export default {
   name: "HelloWorld",
+  props: [
+    "title"
+  ],
 
   data() {
     return{
@@ -21,6 +28,5 @@ export default {
 };
 </script>
 <style>
-.bg {
-}
+
 </style>

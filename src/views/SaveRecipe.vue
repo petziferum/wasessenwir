@@ -32,7 +32,7 @@
           </v-card-subtitle>
           <v-card-actions>
             <v-row justify="center">
-              <v-col cols="8">
+              <v-col cols="8" style="box-shadow: 0 0 13px rgba(50,50,50,0.5);">
                 <v-form ref="form" @submit.prevent="openD">
                   <v-text-field
                     label="Rezept Name"
@@ -205,10 +205,9 @@
       <v-row justify="center">
         <v-col cols="10">
           Rezepte:<br />
-          <v-btn @click="getofflinemeals">get rezepte</v-btn>
           <v-btn @click="getonlinerecipes">online rezepte</v-btn>
           <v-list three-line>
-            <v-list-item v-for="r in offlinemeals" :key="r.nameId">
+            <v-list-item v-for="r in onlineRecipes" :key="r.nameId">
               <v-list-item-avatar>
                 <v-img :src="r.imageSrc"></v-img>
               </v-list-item-avatar>
@@ -223,7 +222,6 @@
               </v-list-item-content>
             </v-list-item>
           </v-list>
-          {{ onlineRecipes }}
         </v-col>
       </v-row>
     </template>
@@ -259,9 +257,6 @@ export default {
   methods: {
     getonlinerecipes() {
       this.$store.dispatch("getRecipes");
-    },
-    getofflinemeals() {
-      this.$store.dispatch("loadmealdata");
     },
     addIngredient(event) {
       console.log(event);
@@ -338,7 +333,6 @@ export default {
           })
           .then(key => {
             let ext = input.imageName.slice(input.imageName.lastIndexOf(".")); // 4. Dateiname wird erstellt
-
             return fireBucket // 5. Verbindung mit dem Firebase Storage wird hergestellt in dem Pfad "recipes/"
               .ref("recipes/" + key + ext)
               .put(file)
@@ -376,52 +370,6 @@ export default {
           });
       }
     },
-    sendInput() {
-      let input = {
-        name: this.recipeName,
-        imageName: this.filename,
-        time: Date.now()
-      };
-      let imgsrc;
-      let key;
-      let ext;
-      firestore
-        .collection("recipes")
-        .doc("recipe-" + this.recipeName)
-        .set(input)
-        .then(data => {
-          console.info(data.data.key);
-          key = data.data.key;
-          return key;
-        })
-        .then(key => {
-          const filename = this.image.name;
-          ext = filename.slice(filename.lastIndexOf("."));
-          return firebase
-            .storage()
-            .ref("recipes/" + key + ext)
-            .put(this.image);
-        })
-        .then(URL => {
-          imgsrc = URL;
-          console.log(imgsrc);
-          return firestore
-            .collection("recipes")
-            .child(key)
-            .update({ imgsrc: imgsrc });
-        })
-        .then(() => {
-          this.savedRecipe = {
-            id: key,
-            link: "recipe/" + key,
-            imgsrc: imgsrc,
-            ...input
-          };
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
     onFilePicked(event) {
       const files = event.target.files;
       this.filename = files[0].name;
@@ -439,9 +387,6 @@ export default {
   computed: {
     onlineRecipes() {
       return this.$store.getters.getRecipes;
-    },
-    offlinemeals() {
-      return this.$store.getters.getofflinemeals;
     },
     loading() {
       return this.$store.getters.loading;
