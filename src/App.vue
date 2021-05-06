@@ -66,7 +66,7 @@ export default {
       {
         action: "mdi-floppy",
         title: "Rezept speichern",
-        to: "saveRecipe"
+        to: "/saveRecipe"
       },
       { action: "mdi-food", title: "Abendessen", to: "/" },
       { action: "mdi-form-select", title: "Inventar", to: "/inventar" },

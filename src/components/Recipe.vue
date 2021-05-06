@@ -1,16 +1,16 @@
 <template>
-  <v-container>
-    <v-carousel v-model="model" max-height="50em" mandatory>
+  <v-container fluid>
+    <v-carousel v-model="model" :cycle="false" mandatory>
       <v-carousel-item v-for="(step, i) in steps" :key="i">
         <v-sheet class="display-3" color="transparent">
-          <v-row justify="center" align="center" class="">
+          <v-row justify="center" align="center">
             <template v-if="i == 0">
               <div>
                 Zutaten:
                 <v-list color="transparent">
                   <v-list-item v-for="(z, x) in step" :key="x">
                     <v-list-item-content>
-                      <v-list-item-title class="display-1"
+                      <v-list-item-title class="body-1"
                         >{{ z.menge }} - {{ z.name }}
                       </v-list-item-title>
                     </v-list-item-content>
@@ -19,7 +19,7 @@
               </div>
             </template>
             <template v-else>
-              <div>
+              <div class="pa-3 headline">
                 {{ step.text }}
               </div>
             </template>

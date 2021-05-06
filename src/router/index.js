@@ -13,6 +13,7 @@ const routes = [
     name: "Home",
     component: Home
   },
+
   {
     path: "/recipe/",
     name: "Recipe",
@@ -26,8 +27,19 @@ const routes = [
         path: ":recipe_id",
         name: "recipeId",
         component: () => import("@/components/Recipe")
-      }
+      },
     ]
+  },
+  {
+    path: "/saveRecipe",
+    name: "newRecipe",
+    component: () => import("@/views/SaveRecipe")
+  },
+  {
+    path: "/edit/:id",
+    name: "Edit",
+    props:true,
+    component:() => import("@/views/EditRecipe")
   },
   {
     path: "/upload",
@@ -48,11 +60,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
   },
-  {
-    path: "/saveRecipe",
-    name: "newRecipe",
-    component: () => import("@/views/SaveRecipe")
-  },
+
   {
     path: "/login",
     name: "login",
