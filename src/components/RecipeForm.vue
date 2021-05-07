@@ -134,10 +134,50 @@
           />
           <span v-if="image"> {{ filename }}</span>
           <v-btn text>X</v-btn>
+          <v-img width="100" :src="recipe.imageSrc"></v-img>
+        </v-col>
+        <v-col cols="12" lg="6">
+          <v-dialog
+            transition="dialog-bottom-transition"
+            fullscreen
+            v-model="imageDialog"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn v-on="on" v-bind="attrs" @click="loadImages"
+                >Online Bilder</v-btn
+              >
+            </template>
+            <v-card>
+              <v-toolbar color="primary">
+                <v-toolbar-title>Bildergallerie</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-toolbar-items>
+                  <v-btn text @click="imageDialog = false"
+                    ><v-icon>mdi-close</v-icon></v-btn
+                  >
+                </v-toolbar-items>
+              </v-toolbar>
+              <v-row>
+                <v-col
+                  cols="6"
+                  md="3"
+                  lg="3"
+                  v-for="(image, i) in imageGallery"
+                  :key="i"
+                >
+                  <v-card link @click="addImageToRecipe(image)" rounded="xl"
+                    ><v-img :src="image.downloadUrl" cover></v-img
+                  ></v-card>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-dialog>
         </v-col>
       </v-row>
 
       <v-btn type="submit" block tile large elevation="5">Speichern </v-btn>
+      <v-card-text class="caption">name:{{recipe.imageName}}</v-card-text>
+      <v-card-text class="caption">src: {{recipe.imageSrc}}</v-card-text>
       <v-dialog
         persistent
         v-if="savedRecipe"
@@ -165,6 +205,7 @@
               Speichern
             </v-btn>
           </v-card-actions>
+
         </v-card>
       </v-dialog>
     </v-form>
@@ -172,11 +213,17 @@
 </template>
 
 <script>
+import { fireBucket } from "@/plugins/firebase";
+
 export default {
   name: "RecipeForm",
-  props:{ recipe:Object },
+  props: { recipe: Object },
   data: () => ({
+    imageDialog: false,
+    imageLoading: false,
+    imageGallery: null,
     recipeName: "",
+    recipeImage: { active: false, imageSrc: "" },
     ingredients: [],
     editItem: null,
     steps: [{ nr: 1, text: "" }],
@@ -185,12 +232,57 @@ export default {
     image: null,
     savedRecipe: null,
     filled: [v => v != "" || "Field must not be empty"],
-    finishDialog: false,
+    finishDialog: false
   }),
   methods: {
+    addImageToRecipe(image) {
+      console.log("add", image.downloadUrl);
+      this.recipe.imageSrc = image.downloadUrl;
+      this.imageDialog = false
+      console.log("recipe", this.recipe)
+    },
+    loadImages() {
+      //https://firebasestorage.googleapis.com/v0/b/recipes-petzi.appspot.com/o/recipes%2F3Gq98gGeUOzwj5Xm1EfO.png?alt=media&token=419bc575-f8e6-48c9-a665-2df89c0953c5
+      this.imageLoading = true;
+      let storage = fireBucket;
+      let storageRef = storage.ref();
+      let listRef = storageRef.child("recipes");
+      listRef
+        .listAll()
+        .then(res => {
+          let images = [];
+
+          res.items.forEach(item => {
+            const fullPath = item.fullPath;
+            let image = {
+              imageSrc: "",
+              downloadUrl: "",
+              imageName: item.name,
+              imageFullPath: fullPath
+            }
+            storageRef
+              .child(fullPath)
+              .getMetadata()
+              .then(meta => {
+                image.imageSrc= meta.bucket;
+              });
+            storageRef
+              .child(fullPath)
+              .getDownloadURL()
+              .then(url => {
+                image.downloadUrl= url;
+              });
+            images.push(image)
+          });
+          this.imageGallery = images;
+        })
+        .then(() => {
+          this.imageLoading = false;
+        });
+    },
     saveFile() {
-      this.$emit("saveRecipe", this.recipe)
-      this.$router.back()
+      this.$emit("saveRecipe", this.recipe);
+      this.$router.back();
     },
     addIngredient(event) {
       console.log(event);
@@ -223,7 +315,7 @@ export default {
         recipeName: this.recipe.recipeName,
         recipeDescription: this.recipe.steps,
         imageName: this.recipe.filename,
-        imageSrc: "",
+        imageSrc: this.recipe.imageSrc,
         ingredients: this.recipe.ingredients,
         createdBy: this.$store.getters.getUser,
         time: Date.now()
@@ -238,7 +330,7 @@ export default {
     onFilePicked(event) {
       const files = event.target.files;
       this.filename = files[0].name;
-      if (this.filename.lastIndexOf(".png") <= 0) {
+      if (this.filename.lastIndexOf(".jpg") <= 0) {
         return alert("Falsch!");
       }
       const fileReader = new FileReader();
@@ -250,11 +342,8 @@ export default {
     }
   },
   computed: {},
-  beforeMount() {
-
-  }
+  beforeMount() {}
 };
-
 </script>
 
 <style scoped></style>

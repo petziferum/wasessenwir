@@ -43,10 +43,15 @@
         v-for="rez in recipes"
         :key="rez.id"
       >
-        <v-card style="cursor: pointer" :to="/recipe/ + rez.id">
+        <v-card link :to="/recipe/ + rez.id">
           <v-card-title>{{ rez.recipeName }}</v-card-title>
           <v-img :src="rez.imageSrc" max-height="200"></v-img>
         </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-btn @click="toast">toast</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -69,6 +74,9 @@ export default {
     }
   },
   methods: {
+    toast(){
+      this.$toast.info("hallo")
+    },
     getRecipes() {
       this.$store.dispatch("getRecipes");
     },
