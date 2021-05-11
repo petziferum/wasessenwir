@@ -49,28 +49,29 @@ export default {
 
       firestore
         .collection("recipes")
-        .doc(this.recipe.id)
+        .doc(daten.id)
         .update(daten)
         .then(() => {
           console.log("geupdated")
-          this.getRecipe();
+          this.getRecipe(daten.id);
         }).catch(error => {
           console.error(error)
       });
     },
-    getRecipe() {
+    getRecipe(id) {
       this.loading = true;
+
       console.info("lade...");
       let recipeRef = firestore
         .collection("recipes")
-        .doc(this.$route.params.id);
+        .doc(id);
 
       recipeRef.get().then(doc => {
         let r = doc.data();
         this.recipe = r;
         this.recipe.id = doc.id;
         this.loading = false;
-        console.log("geladen", r);
+        console.log("Rezept geladen", r);
       });
     }
   },
@@ -79,7 +80,7 @@ export default {
   },
   mounted() {
     console.log("mounting...", this.$route.params.id);
-    this.getRecipe();
+    this.getRecipe(this.$route.params.id);
   }
 };
 </script>

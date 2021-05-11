@@ -43,7 +43,7 @@
                           </template>
                           <template v-else>
                             {{ item.name }}
-                            <div class="float-right">
+                            <div class="float-right" v-if="editMode">
                               <v-btn x-small @click="editItem = i">edit</v-btn>
                             </div>
                           </template>
@@ -118,23 +118,51 @@
         </div>
       </v-sheet>
       <v-row>
-        <v-col cols-12>
-          <v-btn outlined class="primary" @click="onPickFile" dark>
-            <v-icon left>mdi-camera-outline</v-icon>
-            Bild hochladen
-          </v-btn>
-          <input
-            class="caption ma-2"
-            v-show="false"
-            contenteditable="false"
-            type="file"
-            prepend-icon="mdi-camera"
-            ref="fileInput"
-            @change="onFilePicked"
-          />
-          <span v-if="image"> {{ filename }}</span>
-          <v-btn text>X</v-btn>
-          <v-img width="100" :src="recipe.imageSrc"></v-img>
+        <v-col cols="12">
+          <v-row>
+            <v-col style="border:1px solid grey" cols="6"
+              ><v-btn outlined class="primary" @click="pickFile" dark>
+                <v-icon left>mdi-camera-outline</v-icon>
+                Bild hochladen
+              </v-btn>
+              <input
+                class="caption ma-2"
+                v-show="false"
+                contenteditable="false"
+                type="file"
+                prepend-icon="mdi-camera"
+                ref="fileInput"
+                @change="onFilePicked"
+              />
+              <div v-if="imgsrc">
+                <v-img
+                  width="100"
+                  class="ma-3 elevation-3"
+                  :src="imgsrc"
+                >
+                  <v-overlay v-if="imageLoading" absolute class="text-center">
+                    Loading...
+                    <v-icon large>mdi-loading mdi-spin</v-icon>
+                  </v-overlay>
+                </v-img>
+                <v-btn @click="uploadImage">upload</v-btn>
+              </div></v-col
+            >
+            <v-col style="border:1px solid grey; padding: 0" cols="6"
+              ><v-toolbar class="ma-0"
+                ><v-toolbar-title class="font-weight-bold"
+                  >Rezept Bild</v-toolbar-title
+                ></v-toolbar
+              >
+              <span v-if="recipe.imageSrc">
+                <div>{{ recipe.imageName }}</div>
+                <v-img
+                  width="100"
+                  class="ma-3 elevation-3"
+                  :src="recipe.imageSrc"
+                ></v-img> </span
+            ></v-col>
+          </v-row>
         </v-col>
         <v-col cols="12" lg="6">
           <v-dialog
@@ -176,25 +204,37 @@
       </v-row>
 
       <v-btn type="submit" block tile large elevation="5">Speichern </v-btn>
-      <v-card-text class="caption">name:{{recipe.imageName}}</v-card-text>
-      <v-card-text class="caption">src: {{recipe.imageSrc}}</v-card-text>
+      <v-card-text class="caption">name:{{ recipe.imageName }}</v-card-text>
+      <v-card-text class="caption">src: {{ recipe.imageSrc }}</v-card-text>
+      <v-card-text class="caption"
+        >src: {{ finishDialog }}</v-card-text
+      >
       <v-dialog
         persistent
-        v-if="savedRecipe"
         v-model="finishDialog"
         max-width="25em"
       >
         <v-card>
-          <v-card-title class="headline">
-            Willst du das Rezept <br />"{{ savedRecipe.recipeName }}" <br />
+          <v-card-title class="title">
+            Willst du das Rezept <br /><div class="green--text">"{{ recipe.recipeName }}" </div><br />
             speichern?
           </v-card-title>
+          <v-card-subtitle>{{recipe.createdBy.email}}</v-card-subtitle>
           <v-card-text
-            ><p v-for="step in savedRecipe.recipeDescription" :key="step.nr">
+            >
+            <p><b>Zutaten</b></p>
+              <ul>
+                <li v-for="(z,i) in recipe.ingredients" :key="i">{{ z.name }}</li>
+              </ul>
+            <p></p>
+            <p><b>Anleitung</b>:</p>
+            <ol>
+            <li v-for="step in recipe.recipeDescription" :key="step.nr">
               {{ step.text }}
-            </p>
-            <p>{{ savedRecipe.ingredients }}</p>
-            <p>{{ savedRecipe.filename }}</p>
+            </li>
+            </ol>
+            <p v-if="recipe.imageName">{{ recipe.imageName }}</p>
+            <p v-else class="error font-weight-bold text-center">Kein Bild</p>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -205,7 +245,6 @@
               Speichern
             </v-btn>
           </v-card-actions>
-
         </v-card>
       </v-dialog>
     </v-form>
@@ -213,12 +252,13 @@
 </template>
 
 <script>
-import { fireBucket } from "@/plugins/firebase";
+import {timestamp, firestore, fireBucket } from "@/plugins/firebase";
 
 export default {
   name: "RecipeForm",
-  props: { recipe: Object },
+  props: { recipe: Object, edit: Boolean },
   data: () => ({
+    editMode: false,
     imageDialog: false,
     imageLoading: false,
     imageGallery: null,
@@ -238,8 +278,8 @@ export default {
     addImageToRecipe(image) {
       console.log("add", image.downloadUrl);
       this.recipe.imageSrc = image.downloadUrl;
-      this.imageDialog = false
-      console.log("recipe", this.recipe)
+      this.image = image.downloadUrl;
+      this.imageDialog = false;
     },
     loadImages() {
       //https://firebasestorage.googleapis.com/v0/b/recipes-petzi.appspot.com/o/recipes%2F3Gq98gGeUOzwj5Xm1EfO.png?alt=media&token=419bc575-f8e6-48c9-a665-2df89c0953c5
@@ -259,20 +299,20 @@ export default {
               downloadUrl: "",
               imageName: item.name,
               imageFullPath: fullPath
-            }
+            };
             storageRef
               .child(fullPath)
               .getMetadata()
               .then(meta => {
-                image.imageSrc= meta.bucket;
+                image.imageSrc = meta.bucket;
               });
             storageRef
               .child(fullPath)
               .getDownloadURL()
               .then(url => {
-                image.downloadUrl= url;
+                image.downloadUrl = url;
               });
-            images.push(image)
+            images.push(image);
           });
           this.imageGallery = images;
         })
@@ -280,7 +320,51 @@ export default {
           this.imageLoading = false;
         });
     },
+    pickFile() {
+      this.$refs.fileInput.click();
+    },
+    onFilePicked(event) {
+      const files = event.target.files;
+      const file = files[0];
+      const validType = file.type == "image/jpeg" || file.type == "image/png";
+      this.filename = file.name;
+      if (!validType) {
+        this.$toast.error("Dateiformat muss 'jpg' oder 'png' sein.");
+        return;
+      }
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.imgsrc = fileReader.result;
+      });
+      fileReader.readAsDataURL(file);
+      this.image = file;
+    },
+    uploadImage() {
+      this.imageLoading = true
+      fireBucket
+        .ref("recipes/" + this.filename)
+        .put(this.image)
+        .then(fileData => {
+          console.log("fileData: ", fileData); // 6. Bild wird gespeichert und als Objekt angelegt
+          return fireBucket.ref("recipes/" + this.filename).getDownloadURL(); //7. Die URL des Bildes wird zurück gegeben
+        })
+        .then(URL => {
+          console.log("hochgeladen", URL);
+          this.recipe.imageSrc = URL;
+          this.imgsrc = null;
+          this.image = null;
+          this.filename = "";
+          return firestore
+            .collection("recipes")
+            .doc(this.recipe.id)
+            .update({
+              imageSrc: URL // 8. Die URL zum Bild wird im gerade erstellten Dokument gespeichert, welches anhand des keys gefunden wird
+            }).then(()=> this.imageLoading = false);
+        });
+    },
     saveFile() {
+      this.recipe.time = timestamp;
+      console.log("Rezept wurde gespeichert", this.recipe, this.recipe.time)
       this.$emit("saveRecipe", this.recipe);
       this.$router.back();
     },
@@ -297,18 +381,15 @@ export default {
       this.$refs.zutatForm.reset();
     },
     addStep() {
-      if (this.steps.length <= 9) {
-        const x = { nr: this.steps.length + 1, text: "" };
-        this.steps.push(x);
+      if (this.recipe.recipeDescription.length <= 9) {
+        const x = { nr: this.recipe.recipeDescription.length + 1, text: "" };
+        this.recipe.recipeDescription.push(x);
       }
     },
     deleteStep(n) {
-      if (this.steps.length > 1) {
-        this.steps.splice(n, 1);
+      if (this.recipe.recipeDescription.length > 1) {
+        this.recipe.recipeDescription.splice(n, 1);
       }
-    },
-    onPickFile() {
-      this.$refs.fileInput.click();
     },
     openD() {
       let saveR = {
@@ -318,31 +399,20 @@ export default {
         imageSrc: this.recipe.imageSrc,
         ingredients: this.recipe.ingredients,
         createdBy: this.$store.getters.getUser,
-        time: Date.now()
       };
-
+  console.log("openD",saveR, this.$refs.form.validate(), this.finishDialog)
       if (this.$refs.form.validate()) {
-        this.savedRecipe = saveR;
         this.finishDialog = true;
         this.$store.commit("loading", true);
       }
-    },
-    onFilePicked(event) {
-      const files = event.target.files;
-      this.filename = files[0].name;
-      if (this.filename.lastIndexOf(".jpg") <= 0) {
-        return alert("Falsch!");
-      }
-      const fileReader = new FileReader();
-      fileReader.addEventListener("load", () => {
-        this.imgsrc = fileReader.result;
-      });
-      fileReader.readAsDataURL(files[0]);
-      this.image = files[0];
     }
   },
   computed: {},
-  beforeMount() {}
+  beforeMount() {
+    if (this.edit) {
+      this.editMode = this.edit;
+    }
+  }
 };
 </script>
 

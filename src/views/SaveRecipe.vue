@@ -399,7 +399,7 @@ export default {
     onFilePicked(event) {
       const files = event.target.files;
       this.filename = files[0].name;
-      if (this.filename.lastIndexOf(".png") <= 0) {
+      if (this.filename.lastIndexOf(".jpg") <= 0) {
         return alert("Falsch!");
       }
       const fileReader = new FileReader();
