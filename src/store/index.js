@@ -1,8 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import Question from "../components/models/question";
-import recipesStore from "./modules/recipesStore"
-import {firestore, fireBucket} from "@/plugins/firebase";
+import recipesStore from "./modules/recipesStore";
+import { firestore, fireBucket } from "@/plugins/firebase";
 
 Vue.use(Vuex);
 
@@ -16,6 +16,13 @@ export default new Vuex.Store({
     images: "",
     gallerie: [],
     user: null,
+    menuItems: [
+      { action: "mdi-food", title: "Abendessen", to: "/" },
+      { action: "mdi-floppy", title: "Rezept speichern", to: "/saveRecipe" },
+      { action: "mdi-login", title: "LogIn", to: "Login" },
+      { action: "mdi-upload", title: "Image Upload", to: "/upload" },
+      { action: "mdi-form-select", title: "Inventar", to: "/inventar" }
+    ],
     foodTable: {
       headers: [
         {
@@ -51,9 +58,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    SET_GALLERIE(state,payload){
-      console.log("payload images", payload)
-      state.gallerie = payload
+    SET_GALLERIE(state, payload) {
+      console.log("payload images", payload);
+      state.gallerie = payload;
     },
     CREATE_QUESTION(state, payload) {
       console.info(payload);
@@ -75,12 +82,12 @@ export default new Vuex.Store({
   },
   actions: {
     loadImages({ commit }) {
-      let storage = fireBucket
+      let storage = fireBucket;
       let storageRef = storage.ref();
       let listRef = storageRef.child("recipes");
       listRef.listAll().then(res => {
         let image = [];
-        console.log("Bilder laden...", res)
+        console.log("Bilder laden...", res);
         res.items.forEach(item => {
           storageRef
             .child(item.fullPath)
@@ -89,7 +96,7 @@ export default new Vuex.Store({
               image.push(url);
             });
         });
-        commit("SET_GALLERIE", image)
+        commit("SET_GALLERIE", image);
       });
     },
     autoLogin({ commit }, user) {
@@ -101,7 +108,8 @@ export default new Vuex.Store({
     },
     saveLebensmittel({ commit, dispatch }, payload) {
       console.log(payload);
-      firestore.collection("inventory")
+      firestore
+        .collection("inventory")
         .add(payload)
         .then(res => {
           payload.id = res.id;
@@ -121,7 +129,8 @@ export default new Vuex.Store({
     },
     getInventory({ commit, state }) {
       state.foodTable.items = [];
-      firestore.collection("inventory")
+      firestore
+        .collection("inventory")
         .get()
         .then(response => {
           response.forEach(el => {
@@ -132,18 +141,21 @@ export default new Vuex.Store({
         });
     },
     deleteInventoryItem({ commit, dispatch }, id) {
-      firestore.collection("inventory")
+      firestore
+        .collection("inventory")
         .doc(id)
         .delete()
         .then(() => {
           commit("deleteItem", id);
         })
         .finally(() => dispatch("getInventory"));
-    },
-
+    }
   },
 
   getters: {
+    menuItems: state => {
+      return state.menuItems;
+    },
     loading: state => {
       return state.loading;
     },

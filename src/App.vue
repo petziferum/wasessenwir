@@ -1,29 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar clipped app class="pa-0" color="primary" dark>
-      <div class="d-flex align-center center mt-0 ml-0">
-        <v-app-bar-nav-icon @click="drawer = !drawer"> </v-app-bar-nav-icon>
-        <v-img
-          alt="Seiten Logo"
-          class="ma-0 pa-0"
-          :src="logo"
-          contain
-          transition="scale-transition"
-          height="60"
-          width="100"
-        />
-        <v-card-title class="font-weight-black text-uppercase">
-          Rezept-o-Mat
-        </v-card-title>
-      </div>
-
-      <v-spacer></v-spacer>
-      <v-btn icon @click="logOut"
-        ><v-icon large :color="user ? 'green' : 'red'"
-          >mdi-account</v-icon
-        ></v-btn
-      >
-    </v-app-bar>
+    <AppBar v-on:showdrawer="drawer = !drawer"></AppBar>
 
     <v-navigation-drawer app temporary v-model="drawer">
       <v-list>
@@ -51,44 +28,20 @@
 </template>
 
 <script>
-import firebase from "firebase";
+import AppBar from "@/components/AppBar";
 export default {
   name: "App",
 
-  components: {},
+  components: { AppBar },
 
   data: () => ({
     drawer: false,
-    logo: require("@/assets/fast-food.svg"),
-    singleItems: [
-      { action: "mdi-login", title: "LogIn", to: "Login" },
-      { action: "mdi-upload", title: "Image Upload", to: "/upload" },
-      {
-        action: "mdi-floppy",
-        title: "Rezept speichern",
-        to: "/saveRecipe"
-      },
-      { action: "mdi-food", title: "Abendessen", to: "/" },
-      { action: "mdi-form-select", title: "Inventar", to: "/inventar" },
-
-    ]
+    logo: require("@/assets/fast-food.svg")
   }),
-  methods: {
-    logOut() {
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          return this.$store.commit("SET_USER", null);
-        })
-        .catch(function(error) {
-          console.error("An error happened", error);
-        });
-    }
-  },
+  methods: {},
   computed: {
-    user() {
-      return this.$store.getters.getUser;
+    singleItems() {
+      return this.$store.getters.menuItems;
     }
   },
   beforeMount() {
