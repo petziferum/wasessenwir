@@ -1,33 +1,41 @@
 <template>
-  <v-container fluid>
-    <v-carousel v-model="model" :cycle="false" mandatory>
+    <v-carousel v-model="model" :cycle="false" :height="ih" style="margin-bottom: 0; padding-bottom: 0;">
       <v-carousel-item v-for="(step, i) in steps" :key="i">
         <v-sheet class="display-3" color="transparent">
-          <v-row justify="center" align="center">
             <template v-if="i == 0">
-              <div>
-                Zutaten:
-                <v-list color="transparent">
-                  <v-list-item v-for="(z, x) in step" :key="x">
-                    <v-list-item-content>
-                      <v-list-item-title class="body-1"
-                        >{{ z.menge }} - {{ z.name }}
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </div>
+              <v-row >
+                <v-col class="pt-7 text text-center" cols="12">
+                  Zutaten: {{ih}}
+                </v-col>
+              </v-row>
+              <v-row justify="center">
+                <v-col cols="6">
+                  <v-list color="transparent">
+                    <v-list-item v-for="(z, x) in step" :key="x">
+                      <v-list-item-content>
+                        <v-list-item-title class="body-1 text"
+                          >{{ z.menge }} - {{ z.name }}
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                </v-col>
+              </v-row>
             </template>
             <template v-else>
-              <div class="pa-3 headline">
-                {{ step.text }}
-              </div>
+              <v-row justify="center" align-content="center" style="position: absolute; height: 100%; width:100%;">
+                <v-col cols="8">
+                  <div class="text">
+                    {{ step.text }}
+                  </div>
+
+
+                </v-col>
+              </v-row>
             </template>
-          </v-row>
         </v-sheet>
       </v-carousel-item>
     </v-carousel>
-  </v-container>
 </template>
 
 <script>
@@ -73,6 +81,9 @@ export default {
     $route: "updateId"
   },
   computed: {
+ih(){
+  return document.defaultView.innerHeight -260;
+},
     user() {
       return this.$store.getters.getUser;
     }
@@ -83,4 +94,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.text{
+  color:#505050;
+  text-shadow: 3px 3px 3px rgba(0,0,0,0.3);
+  font-weight: bold;
+  font-size: 16pt;
+  line-height: 20pt;
+}
+</style>

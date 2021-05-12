@@ -8,7 +8,9 @@
       </v-btn>
         <div class="mx-auto" color="black">{{recipeId}}</div>
       </v-toolbar>
-      <router-view></router-view>
+      <v-main style="border:1px solid green; padding:0; margin:0; bottom:0; height: 100%">
+      <router-view style="height: 100%"></router-view>
+      </v-main>
     </v-col>
   </v-row>
 </template>
