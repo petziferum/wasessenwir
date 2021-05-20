@@ -2,6 +2,7 @@
   <v-card flat class="ma-0 mt-10 pa-1">
     <v-form ref="form" @submit.prevent="openD">
       <v-text-field
+        name="name"
         label="Rezept Name"
         v-model="recipe.recipeName"
         :rules="filled"
@@ -120,7 +121,7 @@
       <v-row>
         <v-col cols="12">
           <v-row>
-            <v-col style="border:1px solid grey" cols="6"
+            <v-col cols="6"
               ><v-btn outlined class="primary" @click="pickFile" dark>
                 <v-icon left>mdi-camera-outline</v-icon>
                 Bild hochladen
@@ -148,7 +149,7 @@
                 <v-btn @click="uploadImage">upload</v-btn>
               </div></v-col
             >
-            <v-col style="border:1px solid grey; padding: 0" cols="6"
+            <v-col cols="6"
               ><v-toolbar class="ma-0"
                 ><v-toolbar-title class="font-weight-bold"
                   >Rezept Bild</v-toolbar-title
@@ -214,7 +215,7 @@
         v-model="finishDialog"
         max-width="25em"
       >
-        <v-card>
+        <v-card v-if="finishDialog">
           <v-card-title class="title">
             Willst du das Rezept <br /><div class="green--text">"{{ recipe.recipeName }}" </div><br />
             speichern?
@@ -271,7 +272,7 @@ export default {
     imgsrc: "",
     image: null,
     savedRecipe: null,
-    filled: [v => v != "" || "Field must not be empty"],
+    filled: [v => v != "" || "Feld darf nicht leer sein.", v => v != null || "Feld darf nicht NULL sein."],
     finishDialog: false
   }),
   methods: {
@@ -363,10 +364,11 @@ export default {
         });
     },
     saveFile() {
+      this.finishDialog= false
       this.recipe.time = timestamp;
-      console.log("Rezept wurde gespeichert", this.recipe, this.recipe.time)
+      console.log("Rezept wird gespeichert", this.recipe, this.recipe.time)
       this.$emit("saveRecipe", this.recipe);
-      this.$router.back();
+
     },
     addIngredient(event) {
       console.log(event);
@@ -393,8 +395,9 @@ export default {
     },
     openD() {
       let saveR = {
+        //ToDo: eingaben werden hier wieder gelöscht, dafür muss eine andere Möglichkeit beim Neu anlegen gefunden werden. Aber ich hab grad kein Bock drauf
         recipeName: this.recipe.recipeName,
-        recipeDescription: this.recipe.steps,
+        recipeDescription: this.recipe.recipeDescription,
         imageName: this.recipe.filename,
         imageSrc: this.recipe.imageSrc,
         ingredients: this.recipe.ingredients,
@@ -407,8 +410,13 @@ export default {
       }
     }
   },
-  computed: {},
+  computed: {
+    user() {
+      return this.$store.getters.getUser;
+    }
+  },
   beforeMount() {
+    this.recipe.createdBy = this.user;
     if (this.edit) {
       this.editMode = this.edit;
     }

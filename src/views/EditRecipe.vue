@@ -6,9 +6,9 @@
         <v-btn @click="$router.back()">
           <v-icon>mdi-arrow-left-bold-outline</v-icon>
         </v-btn>
-        <v-btn>
+        <v-btn color="red" dark @click="deleteRecipe">
           <v-icon>
-            mdi-content-save
+            mdi-delete
           </v-icon>
         </v-btn>
       </v-toolbar-items>
@@ -23,6 +23,7 @@
     <template v-else>
       <recipe-form
         :recipe="recipe"
+        :edit="true"
         v-on:saveRecipe="updateRecipe"
       ></recipe-form>
     </template>
@@ -41,9 +42,25 @@ export default {
   data: () => ({
     recipe: null,
     loading: true,
-    editRecipeId: null
+    editRecipeId: null,
+    id: null
   }),
   methods: {
+    deleteRecipe() {
+      firestore
+        .collection("recipes")
+        .doc(this.id)
+        .delete()
+        .then(() => {
+          this.$toast.error("Rezept " + this.id + " wurde gelöscht.");
+        })
+        .catch(err => {
+          console.log("fehler", err);
+        })
+      .finally(()=> {
+        this.$router.push("/saveRecipe")
+      });
+    },
     updateRecipe(daten) {
       console.log("empfangen", daten.id);
 
@@ -52,19 +69,19 @@ export default {
         .doc(daten.id)
         .update(daten)
         .then(() => {
-          console.log("geupdated")
+          console.log("geupdated");
           this.getRecipe(daten.id);
-        }).catch(error => {
-          console.error(error)
-      });
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      this.$router.back();
     },
     getRecipe(id) {
       this.loading = true;
 
       console.info("lade...");
-      let recipeRef = firestore
-        .collection("recipes")
-        .doc(id);
+      let recipeRef = firestore.collection("recipes").doc(id);
 
       recipeRef.get().then(doc => {
         let r = doc.data();
@@ -78,7 +95,8 @@ export default {
   watch: {
     $route: console.log("route change")
   },
-  mounted() {
+  beforeMount() {
+    this.id = this.$route.params.id;
     console.log("mounting...", this.$route.params.id);
     this.getRecipe(this.$route.params.id);
   }
