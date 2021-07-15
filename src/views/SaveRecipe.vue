@@ -127,7 +127,16 @@ export default {
         });
     },
     saveFile(emittedRecipe) {
+      const recipeClear = {
+        createdBy: null,
+            ingredients: [],
+            recipeDescription: [{ nr: 1, text: "" }],
+            recipeName: null,
+            time: null
+      }
+      this.newRecipe = recipeClear;
       this.finishDialog = false;
+
       let input = emittedRecipe;
       console.log("emittedRecipe", emittedRecipe);
       //const metadata = { contentType: "image/jpeg" }

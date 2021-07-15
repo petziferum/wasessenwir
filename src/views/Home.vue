@@ -2,7 +2,7 @@
   <v-container fluid class="pa-0">
     <v-row no-gutters style="border-bottom: solid 4px white;">
       <v-img
-        :src="require('../assets/textlogo.svg')"
+        :src="require('../assets/textlogo.png')"
         class="my-0 pa-0"
         cover
         height="300px"

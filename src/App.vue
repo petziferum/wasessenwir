@@ -36,7 +36,7 @@ export default {
 
   data: () => ({
     drawer: false,
-    logo: require("@/assets/fast-food.svg")
+
   }),
   methods: {},
   computed: {
