@@ -15,20 +15,9 @@ const routes = [
   },
 
   {
-    path: "/recipe/",
+    path: "/recipe/:recipe_id",
     name: "Recipe",
-    component: Hello,
-    children: [
-      {
-        path: "",
-        name: "recipeHome"
-      },
-      {
-        path: ":recipe_id",
-        name: "recipeId",
-        component: () => import("@/components/Recipe")
-      },
-    ]
+    component: Hello
   },
   {
     path: "/saveRecipe",
@@ -38,8 +27,8 @@ const routes = [
   {
     path: "/edit/:id",
     name: "Edit",
-    props:true,
-    component:() => import("@/views/EditRecipe")
+    props: true,
+    component: () => import("@/views/EditRecipe")
   },
   {
     path: "/upload",
@@ -65,7 +54,7 @@ const routes = [
     path: "/login",
     name: "login",
     component: () => import("@/views/LoginPage")
-  },
+  }
 ];
 
 const router = new VueRouter({

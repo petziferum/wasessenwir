@@ -8,6 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    activeRecipe: null,
     drawer: false,
     loading: true,
     question: [],
@@ -59,11 +60,12 @@ export default new Vuex.Store({
   },
   mutations: {
     SET_GALLERIE(state, payload) {
-      console.log("payload images", payload);
       state.gallerie = payload;
     },
+    SET_ACTIVE_RECIPE(state, payload) {
+      state.activeRecipe = payload;
+    },
     CREATE_QUESTION(state, payload) {
-      console.info(payload);
       const newQuestion = new Question.createQuestion(payload);
       state.question.push(newQuestion);
     },
@@ -81,6 +83,16 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    loadSingleRecipe({ commit }, id) {
+      commit("loading", true);
+      let recipeRef = firestore.collection("recipes").doc(id);
+      recipeRef.get().then(doc => {
+        let recipeData = doc.data();
+
+        commit("SET_ACTIVE_RECIPE", recipeData);
+        setTimeout(()=> commit("loading", false), 200);
+      });
+    },
     loadImages({ commit }) {
       let storage = fireBucket;
       let storageRef = storage.ref();
@@ -153,6 +165,9 @@ export default new Vuex.Store({
   },
 
   getters: {
+    getActiveRecipe: state => {
+      return state.activeRecipe;
+    },
     menuItems: state => {
       return state.menuItems;
     },

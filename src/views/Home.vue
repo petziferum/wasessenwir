@@ -3,9 +3,11 @@
     <v-row no-gutters style="border-bottom: solid 4px white;">
       <v-img
         :src="require('../assets/textlogo.png')"
-        class="my-0 pa-0"
-        cover
-        height="300px"
+        class="logobanner my-0 pa-0"
+        min-height="300px"
+        max-height="480"
+
+
       >
         <v-row justify="center" class="search" no-gutters>
           <v-col cols="11" md="6">
@@ -132,6 +134,9 @@ export default {
 };
 </script>
 <style>
+.logobanner {
+
+}
 .search {
   position: absolute;
   bottom: 0;
