@@ -6,35 +6,39 @@
     progress-color="white"
     delimiter-icon="mdi-hamburger"
     :height="windowHeight"
-    style="margin-bottom: 0; padding-bottom: 0;"
+    style="margin:0; padding-bottom:100px;"
   >
     <v-carousel-item v-for="(step, i) in steps" :key="i">
       <v-sheet class="display-3" color="transparent">
         <template v-if="i == 0">
-          <v-row>
-            <v-col class="pt-7 text text-center" cols="12">
-              Zutaten
-            </v-col>
-          </v-row>
-          <v-row justify="center">
-            <v-col cols="6">
-              <v-list color="white">
-                <v-list-item v-for="(z, x) in step" :key="x">
-                  <v-list-item-content>
-                    <v-list-item-title class="body-1 text"
-                      >{{ z.menge }} - {{ z.name }}
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
-            </v-col>
-          </v-row>
+          <v-img :src="recipe.imageSrc" :height="windowHeight">
+            <v-row>
+              <v-col class="pt-7 text-h5 text-center" cols="12">
+                Zutaten
+              </v-col>
+            </v-row>
+            <v-row justify="center">
+              <v-col cols="8" md="6" lg="4">
+                <v-list color="white" dense>
+                  <v-list-item-group>
+                    <v-list-item v-for="(z, x) in step" :key="x">
+                      <v-list-item-content>
+                        <v-list-item-title class="text"
+                          >{{ z.menge }} - {{ z.name }}
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list-item-group>
+                </v-list>
+              </v-col>
+            </v-row>
+          </v-img>
         </template>
         <template v-else>
           <v-row
             justify="center"
             align-content="center"
-            style="position: absolute; height: 100%; width:100%;"
+            style="position: relative; height: 100%; width:100%;"
           >
             <v-col cols="8">
               <div class="text">
@@ -51,9 +55,7 @@
 <script>
 export default {
   name: "Recipe",
-  props: [
-    "recipe"
-  ],
+  props: ["recipe"],
   data() {
     return {
       recipeId: this.$route.params.recipe_id,
@@ -74,7 +76,7 @@ export default {
 
   computed: {
     windowHeight() {
-      return (document.defaultView.innerHeight / 2)+55;
+      return document.defaultView.innerHeight - 200;
     },
     user() {
       return this.$store.getters.getUser;
@@ -90,8 +92,7 @@ export default {
 .text {
   color: #505050;
   text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
-  font-weight: bold;
-  font-size: 16pt;
-  line-height: 20pt;
+  font-weight: normal;
+  font-size: 13pt !important;
 }
 </style>

@@ -41,11 +41,16 @@
                                 append-icon="mdi-content-save"
                               ></v-text-field>
                             </v-form>
+                            <v-btn x-small color="red" @click="deleteItem(i)"
+                              >delete</v-btn
+                            >
                           </template>
                           <template v-else>
                             {{ item.name }}
                             <div class="float-right" v-if="editMode">
-                              <v-btn x-small @click="editItem = i">edit</v-btn>
+                              <v-btn class="mr-1" x-small @click="editItem = i"
+                                >edit</v-btn
+                              >
                             </div>
                           </template>
                         </v-col>
@@ -136,11 +141,7 @@
                 @change="onFilePicked"
               />
               <div v-if="imgsrc">
-                <v-img
-                  width="100"
-                  class="ma-3 elevation-3"
-                  :src="imgsrc"
-                >
+                <v-img width="100" class="ma-3 elevation-3" :src="imgsrc">
                   <v-overlay v-if="imageLoading" absolute class="text-center">
                     Loading...
                     <v-icon large>mdi-loading mdi-spin</v-icon>
@@ -149,6 +150,7 @@
                 <v-btn @click="uploadImage">upload</v-btn>
               </div></v-col
             >
+            <v-divider vertical inset></v-divider>
             <v-col cols="6"
               ><v-toolbar class="ma-0"
                 ><v-toolbar-title class="font-weight-bold"
@@ -166,6 +168,12 @@
           </v-row>
         </v-col>
         <v-col cols="12" lg="6">
+          <!--
+          --
+          -- Bilder Dialog Box
+          --
+          -->
+
           <v-dialog
             transition="dialog-bottom-transition"
             fullscreen
@@ -201,38 +209,40 @@
               </v-row>
             </v-card>
           </v-dialog>
+
+          <!-- Ende Bilder Auswahl Dialog
+          -->
         </v-col>
       </v-row>
 
-      <v-btn type="submit" block tile large elevation="5">Speichern </v-btn>
+      <v-btn type="submit" block tile large elevation="5" class="mt-2"
+        >Speichern
+      </v-btn>
       <v-card-text class="caption">name:{{ recipe.imageName }}</v-card-text>
       <v-card-text class="caption">src: {{ recipe.imageSrc }}</v-card-text>
-      <v-card-text class="caption"
-        >src: {{ finishDialog }}</v-card-text
-      >
-      <v-dialog
-        persistent
-        v-model="finishDialog"
-        max-width="25em"
-      >
+      <v-card-text class="caption">src: {{ finishDialog }}</v-card-text>
+      <v-dialog persistent v-model="finishDialog" max-width="25em">
         <v-card v-if="finishDialog">
           <v-card-title class="title">
-            Willst du das Rezept <br /><div class="green--text">"{{ recipe.recipeName }}" </div><br />
+            Willst du das Rezept <br />
+            <div class="green--text">"{{ recipe.recipeName }}"</div>
+            <br />
             speichern?
           </v-card-title>
-          <v-card-subtitle>{{recipe.createdBy.email}}</v-card-subtitle>
-          <v-card-text
-            >
+          <v-card-subtitle>{{ recipe.createdBy.email }}</v-card-subtitle>
+          <v-card-text>
             <p><b>Zutaten</b></p>
-              <ul>
-                <li v-for="(z,i) in recipe.ingredients" :key="i">{{ z.name }}</li>
-              </ul>
+            <ul>
+              <li v-for="(z, i) in recipe.ingredients" :key="i">
+                {{ z.name }}
+              </li>
+            </ul>
             <p></p>
             <p><b>Anleitung</b>:</p>
             <ol>
-            <li v-for="step in recipe.recipeDescription" :key="step.nr">
-              {{ step.text }}
-            </li>
+              <li v-for="step in recipe.recipeDescription" :key="step.nr">
+                {{ step.text }}
+              </li>
             </ol>
             <p v-if="recipe.imageName">{{ recipe.imageName }}</p>
             <p v-else class="error font-weight-bold text-center">Kein Bild</p>
@@ -242,7 +252,7 @@
             <v-btn color="green darken-1" text @click="finishDialog = false">
               Abrechen
             </v-btn>
-            <v-btn color="green darken-1" text @click="saveFile">
+            <v-btn color="success" text @click="saveFile">
               Speichern
             </v-btn>
           </v-card-actions>
@@ -253,7 +263,7 @@
 </template>
 
 <script>
-import {timestamp, firestore, fireBucket } from "@/plugins/firebase";
+import { timestamp, firestore, fireBucket } from "@/plugins/firebase";
 
 export default {
   name: "RecipeForm",
@@ -272,10 +282,26 @@ export default {
     imgsrc: "",
     image: null,
     savedRecipe: null,
-    filled: [v => v != "" || "Feld darf nicht leer sein.", v => v != null || "Feld darf nicht NULL sein."],
+    filled: [
+      v => v != "" || "Feld darf nicht leer sein.",
+      v => v != null || "Feld darf nicht NULL sein."
+    ],
     finishDialog: false
   }),
   methods: {
+    deleteItem(item) {
+      const z = this.recipe.ingredients[item];
+      this.recipe.ingredients.splice(item, 1);
+      firestore
+        .collection("recipes")
+        .doc(this.recipe.id)
+        .update({
+          ingredients: this.recipe.ingredients
+        })
+        .then(() => this.$toast("Zutat " + z.name + " gelöscht"));
+      this.editItem = null;
+    },
+
     addImageToRecipe(image) {
       console.log("add", image.downloadUrl);
       this.recipe.imageSrc = image.downloadUrl;
@@ -341,7 +367,7 @@ export default {
       this.image = file;
     },
     uploadImage() {
-      this.imageLoading = true
+      this.imageLoading = true;
       fireBucket
         .ref("recipes/" + this.filename)
         .put(this.image)
@@ -360,25 +386,31 @@ export default {
             .doc(this.recipe.id)
             .update({
               imageSrc: URL // 8. Die URL zum Bild wird im gerade erstellten Dokument gespeichert, welches anhand des keys gefunden wird
-            }).then(()=> this.imageLoading = false);
+            })
+            .then(() => (this.imageLoading = false));
         });
     },
     saveFile() {
-      this.finishDialog= false
+      this.finishDialog = false;
       this.recipe.time = timestamp;
-      console.log("Rezept wird gespeichert", this.recipe, this.recipe.time)
+      console.log("Rezept wird gespeichert", this.recipe, this.recipe.time);
       this.$emit("saveRecipe", this.recipe);
-
     },
     addIngredient(event) {
       console.log(event);
+      let tempNr = 0;
+      this.recipe.ingredients.forEach(element => {
+        if (tempNr < element.nr) {
+          tempNr = element.nr;
+        }
+      });
       const newItem = {
-        nr: this.recipe.ingredients.length + 1,
+        nr: tempNr + 1,
         menge: event.target.menge.value,
         name: event.target.name.value
       };
 
-      console.log("add ingredient", newItem);
+      console.log("add ingredient", newItem, "mit Nummer", tempNr);
       this.recipe.ingredients.push(newItem);
       this.$refs.zutatForm.reset();
     },
@@ -401,9 +433,14 @@ export default {
         imageName: this.recipe.filename,
         imageSrc: this.recipe.imageSrc,
         ingredients: this.recipe.ingredients,
-        createdBy: this.$store.getters.getUser,
+        createdBy: this.$store.getters.getUser
       };
-  console.log("openD",saveR, this.$refs.form.validate(), this.finishDialog)
+      console.log(
+        "openD",
+        saveR,
+        this.$refs.form.validate(),
+        this.finishDialog
+      );
       if (this.$refs.form.validate()) {
         this.finishDialog = true;
         this.$store.commit("loading", true);

@@ -1,17 +1,23 @@
 <template>
   <v-row no-gutters>
-    <v-col>
-      <v-toolbar height="100%">
-        <v-btn color="primary" fab @click="$router.back()">
+    <v-col cols="12" class="pa-0">
+      <v-toolbar height="100%" dense>
+        <v-btn color="primary" @click="$router.back()">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <div class="mx-auto" color="black">{{ recipeId }}</div>
+        <div class="mx-auto display-1" color="black">
+          {{ activeRecipe.recipeName }}
+        </div>
       </v-toolbar>
-      <v-row>
+      <v-row no-gutters>
         <v-col cols="12">
-          <v-skeleton-loader v-if="loading" class="mt-10" type="article, actions"></v-skeleton-loader>
+          <v-skeleton-loader
+            v-if="loading"
+            class="mt-10"
+            type="article, actions"
+          ></v-skeleton-loader>
         </v-col>
-        <v-col v-if="!loading">
+        <v-col cols="12" v-if="!loading" class="pa-0 ma-0">
           <recipe-carousel :recipe="activeRecipe"></recipe-carousel>
         </v-col>
       </v-row>
@@ -30,12 +36,12 @@ export default {
 
   data() {
     return {
-      recipeId: this.$route.params.recipe_id,
+      recipeId: this.$route.params.recipe_id
     };
   },
   methods: {
     loadRecipe() {
-      this.$store.dispatch("loadSingleRecipe", this.recipeId)
+      this.$store.dispatch("loadSingleRecipe", this.recipeId);
     },
     updateId() {
       this.recipeId = this.$route.params.recipe_id;

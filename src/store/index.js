@@ -90,7 +90,7 @@ export default new Vuex.Store({
         let recipeData = doc.data();
 
         commit("SET_ACTIVE_RECIPE", recipeData);
-        setTimeout(()=> commit("loading", false), 200);
+        setTimeout(() => commit("loading", false), 200);
       });
     },
     loadImages({ commit }) {

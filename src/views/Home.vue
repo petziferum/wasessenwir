@@ -6,8 +6,6 @@
         class="logobanner my-0 pa-0"
         min-height="300px"
         max-height="480"
-
-
       >
         <v-row justify="center" class="search" no-gutters>
           <v-col cols="11" md="6">
@@ -21,7 +19,6 @@
                 id="search-item"
                 label="Rezept suchen"
                 prepend-inner-icon="mdi-magnify"
-
               ></v-text-field>
             </v-form>
           </v-col>
@@ -35,7 +32,10 @@
         </v-skeleton-loader>
       </v-col>
     </v-row>
-    <v-row class="ma-5" :justify="$vuetify.breakpoint.smAndDown ? 'center' : 'start'">
+    <v-row
+      class="ma-5"
+      :justify="$vuetify.breakpoint.smAndDown ? 'center' : 'start'"
+    >
       <v-col
         cols="12"
         sm="6"
@@ -76,8 +76,8 @@ export default {
     }
   },
   methods: {
-    toast(){
-      this.$toast.info("hallo")
+    toast() {
+      this.$toast.info("hallo");
     },
     getRecipes() {
       this.$store.dispatch("getRecipes");
@@ -135,7 +135,6 @@ export default {
 </script>
 <style>
 .logobanner {
-
 }
 .search {
   position: absolute;
