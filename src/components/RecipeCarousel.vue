@@ -35,17 +35,20 @@
           </v-img>
         </template>
         <template v-else>
-          <v-row
-            justify="center"
-            align-content="center"
-            style="position: relative; height: 100%; width:100%;"
-          >
-            <v-col cols="8">
-              <div class="text">
-                {{ step.text }}
-              </div>
-            </v-col>
-          </v-row>
+          <v-sheet light :height="windowHeight" color="transparent">
+            <v-row
+              justify="center"
+              align-content="center"
+              style="position: relative; height: 100%; width:100%;"
+            >
+              <v-col cols="8">
+                <v-card light min-height="250px">
+                  <v-card-title>Schritt {{ i }}.</v-card-title>
+                  <v-card-text v-html="step.text"> </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-sheet>
         </template>
       </v-sheet>
     </v-carousel-item>

@@ -59,12 +59,14 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>{{ r.recipeName }}</v-list-item-title>
-                <v-list-item-subtitle
-                  >ingredients: {{ r.ingredients }}</v-list-item-subtitle
-                >
-                <v-list-item-subtitle
-                  >description: {{ r.recipeDescription }}</v-list-item-subtitle
-                >
+
+                <v-list-item-subtitle>
+                  <v-chip-group>
+                    <v-chip x-small v-for="z in r.ingredients" :key="z">
+                      {{ z.name }}
+                    </v-chip>
+                  </v-chip-group>
+                </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -129,11 +131,11 @@ export default {
     saveFile(emittedRecipe) {
       const recipeClear = {
         createdBy: null,
-            ingredients: [],
-            recipeDescription: [{ nr: 1, text: "" }],
-            recipeName: null,
-            time: null
-      }
+        ingredients: [],
+        recipeDescription: [{ nr: 1, text: "" }],
+        recipeName: null,
+        time: null
+      };
       this.newRecipe = recipeClear;
       this.finishDialog = false;
 
