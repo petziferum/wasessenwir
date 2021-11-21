@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="center">
+  <v-container fluid>
     <template v-if="user === null">
       <v-col cols="12" sm="6" md="4" lg="3" xl="3" class="text-center">
         <v-card>
@@ -24,27 +24,29 @@
       </v-col>
     </template>
     <template v-else>
-      <v-col cols="12">
-        <v-card tile class="my-2">
-          <v-card-title> Save New Recipe </v-card-title>
-          <v-card-subtitle>
-            {{ user.email }}
-          </v-card-subtitle>
-          <v-card-actions>
-            <v-row no-gutters justify="center">
-              <v-col cols="12">
-                <RecipeForm
-                  :edit="true"
-                  :recipe="newRecipe"
-                  v-on:saveRecipe="saveFile"
-                ></RecipeForm>
-              </v-col>
-            </v-row>
-          </v-card-actions>
-        </v-card>
-      </v-col>
       <v-row justify="center">
-        <v-col cols="10">
+        <v-col cols="11" md="8" lg="6">
+          <v-card tile class="my-2">
+            <v-card-title> Save New Recipe </v-card-title>
+            <v-card-subtitle>
+              {{ user.email }}
+            </v-card-subtitle>
+            <v-card-actions>
+              <v-row no-gutters justify="center">
+                <v-col cols="12">
+                  <RecipeForm
+                    :edit="true"
+                    :recipe="newRecipe"
+                    v-on:saveRecipe="saveFile"
+                  ></RecipeForm>
+                </v-col>
+              </v-row>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-col cols="11" md="8" lg="6">
           Rezepte:<br />
           <v-btn @click="getonlinerecipes">online rezepte</v-btn>
           <v-list three-line>
@@ -62,7 +64,7 @@
 
                 <v-list-item-subtitle>
                   <v-chip-group>
-                    <v-chip x-small v-for="z in r.ingredients" :key="z">
+                    <v-chip x-small v-for="(z, i) in r.ingredients" :key="i">
                       {{ z.name }}
                     </v-chip>
                   </v-chip-group>
@@ -73,7 +75,7 @@
         </v-col>
       </v-row>
     </template>
-  </v-row>
+  </v-container>
 </template>
 
 <script>
