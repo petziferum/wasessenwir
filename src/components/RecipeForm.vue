@@ -112,6 +112,17 @@
             :append-icon="step.nr > 1 ? 'mdi-minus' : ''"
             @click:append="deleteStep(i)"
           ></v-textarea>
+          <v-btn
+            v-if="step.nr != recipe.recipeDescription.length"
+            color="white"
+            height="18px"
+            class="rounded-b-pill"
+            tile
+            style="position: relative; top:-35px; left: 45%;"
+            @click="addStepBetween(step.nr)"
+            :key="`${i}+addStep`"
+            >+</v-btn
+          >
         </template>
         <div width="100%" class="ma-0 pa-0 text-center">
           <v-btn
@@ -419,6 +430,16 @@ export default {
         const x = { nr: this.recipe.recipeDescription.length + 1, text: "" };
         this.recipe.recipeDescription.push(x);
       }
+    },
+    addStepBetween(nr) {
+      console.log("nr", nr);
+      console.log("länge", this.recipe.recipeDescription.length);
+      this.recipe.recipeDescription.splice(nr, 0, { nr: nr + 1, text: "" });
+      for (let i = nr + 1; i < this.recipe.recipeDescription.length; i++) {
+        console.log("bearbeiten ", i);
+        this.recipe.recipeDescription[i].nr += 1;
+      }
+      console.log(this.recipe.recipeDescription[nr]);
     },
     deleteStep(n) {
       if (this.recipe.recipeDescription.length > 1) {

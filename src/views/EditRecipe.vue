@@ -17,22 +17,19 @@
       <v-col cols="12" md="9" lg="6">
         <template v-if="loading">
           <v-skeleton-loader
-              class="mt-10"
-              type="article, actions"
+            class="mt-10"
+            type="article, actions"
           ></v-skeleton-loader>
         </template>
         <template v-else>
           <recipe-form
-              :recipe="recipe"
-              :edit="true"
-              v-on:saveRecipe="updateRecipe"
+            :recipe="recipe"
+            :edit="true"
+            v-on:saveRecipe="updateRecipe"
           ></recipe-form>
         </template>
       </v-col>
     </v-row>
-
-
-
   </v-container>
 </template>
 
@@ -63,9 +60,9 @@ export default {
         .catch(err => {
           console.log("fehler", err);
         })
-      .finally(()=> {
-        this.$router.push("/saveRecipe")
-      });
+        .finally(() => {
+          this.$router.push("/saveRecipe");
+        });
     },
     updateRecipe(daten) {
       console.log("empfangen", daten.id);
