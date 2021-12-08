@@ -48,7 +48,7 @@
       <v-row justify="center">
         <v-col cols="11" md="8" lg="6">
           Rezepte:<br />
-          <v-btn @click="getonlinerecipes">online rezepte</v-btn>
+          <v-btn @click="getonlinerecipes">Online rezepte</v-btn>
           <v-list three-line>
             <v-list-item
               v-for="r in onlineRecipes"
