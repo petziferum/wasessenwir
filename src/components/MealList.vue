@@ -43,7 +43,6 @@
             </v-list-item-content>
 
             <v-list-item-action>
-
               <v-icon color="accent">mdi-arrow-right-bold</v-icon>
             </v-list-item-action>
           </v-list-item>

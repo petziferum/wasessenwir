@@ -1,7 +1,11 @@
 <template>
   <v-app-bar clipped app class="pa-0" color="primary" dark>
     <div class="d-flex align-center center mt-0 ml-0">
-      <v-app-bar-nav-icon v-show="$vuetify.breakpoint.smAndDown" @click="$emit('showdrawer')"> </v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        v-show="$vuetify.breakpoint.smAndDown"
+        @click="$emit('showdrawer')"
+      >
+      </v-app-bar-nav-icon>
       <v-img
         alt="Seiten Logo"
         class="ma-0 pa-0"
@@ -20,16 +24,14 @@
     <v-btn icon @click="logOut"
       ><v-icon large :color="user ? 'green' : 'red'">mdi-account</v-icon></v-btn
     >
-    <template v-if="$vuetify.breakpoint.mdAndUp" v-slot:extension >
-
+    <template v-if="$vuetify.breakpoint.mdAndUp" v-slot:extension>
       <v-tabs>
         <v-tabs-slider></v-tabs-slider>
         <v-tab link :to="item.to" v-for="(item, i) in menuItems" :key="i">
-          <v-icon>{{item.action}}</v-icon>
-          {{item.title}}
+          <v-icon>{{ item.action }}</v-icon>
+          {{ item.title }}
         </v-tab>
       </v-tabs>
-
     </template>
   </v-app-bar>
 </template>
@@ -59,7 +61,7 @@ export default {
     user() {
       return this.$store.getters.getUser;
     },
-    menuItems(){
+    menuItems() {
       return this.$store.getters.menuItems;
     }
   }

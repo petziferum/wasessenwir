@@ -35,8 +35,7 @@ export default {
   components: { AppBar },
 
   data: () => ({
-    drawer: false,
-
+    drawer: false
   }),
   methods: {},
   computed: {

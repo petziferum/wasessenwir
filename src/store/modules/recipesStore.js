@@ -39,11 +39,11 @@ export default {
         .get()
         .then(res => {
           res.forEach(doc => {
-            const data = doc.data()
+            const data = doc.data();
             data.id = doc.id;
-            let r = Meal.createNewMeal(data)
+            let r = Meal.createNewMeal(data);
 
-            payload.push(r)
+            payload.push(r);
           });
           commit("SET_RECIPES", payload);
         })

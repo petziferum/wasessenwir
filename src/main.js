@@ -3,16 +3,16 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
-import * as firebase from "firebase"
-import Toast from "vue-toastification"
-import "vue-toastification/dist/index.css"
+import * as firebase from "firebase";
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 Vue.config.productionTip = false;
 
 Vue.use(Toast, {
   timeout: 3000,
-  draggable:true,
+  draggable: true,
   position: "bottom-center"
-})
+});
 
 new Vue({
   router,
@@ -20,12 +20,12 @@ new Vue({
   vuetify,
   render: h => h(App),
   created() {
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.$store.dispatch("autoLogin", user)
+        this.$store.dispatch("autoLogin", user);
       } else {
-        console.log("Not Signed in.")
+        console.log("Not Signed in.");
       }
-    })
+    });
   }
 }).$mount("#app");

@@ -47,7 +47,6 @@ export default {
     password: ""
   }),
   methods: {
-
     logIn() {
       firebase
         .auth()

@@ -1,11 +1,8 @@
 export default class Meal {
-
-
-  constructor() { }
+  constructor() {}
 
   static createNewMeal(obj = undefined) {
-    let NewMeal = new Meal(
-    );
+    let NewMeal = new Meal();
     NewMeal._recipeDescription = obj.recipeDescription;
     NewMeal._imageName = obj.imageName;
     NewMeal._imageSrc = obj.imageSrc;
@@ -14,16 +11,15 @@ export default class Meal {
     NewMeal._time = obj.time;
     NewMeal.id = obj.id;
 
-    return NewMeal
+    return NewMeal;
   }
-
 
   get id() {
     return this._id;
   }
-set id(value) {
+  set id(value) {
     this._id = value;
-}
+  }
 
   get nameId() {
     return this._nameId;
