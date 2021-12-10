@@ -5,8 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "deploy": "node scripts/deploy.js"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@mdi/font": "^5.6.55",
