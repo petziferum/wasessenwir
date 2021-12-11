@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Hello from "@/components/HelloWorld";
+import Recipe from "@/components/RecipeView";
 import Home from "../views/Home.vue";
 import UploadImage from "@/views/UploadImage";
 import Inventar from "@/views/Inventar";
@@ -17,7 +17,7 @@ const routes = [
   {
     path: "/recipe/:recipe_id",
     name: "Recipe",
-    component: Hello
+    component: Recipe
   },
   {
     path: "/saveRecipe",

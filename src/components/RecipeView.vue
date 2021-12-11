@@ -5,7 +5,7 @@
         <v-btn color="primary" @click="$router.back()">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <div class="mx-auto display-1" color="black">
+        <div class="mx-auto display-1">
           {{ activeRecipe.recipeName }}
         </div>
       </v-toolbar>
@@ -18,7 +18,7 @@
           ></v-skeleton-loader>
         </v-col>
         <v-col cols="12" v-if="!loading" class="pa-0 ma-0">
-          <recipe-carousel :recipe="activeRecipe"></recipe-carousel>
+          <view-recipe-site :activerecipe="activeRecipe" />
         </v-col>
       </v-row>
     </v-col>
@@ -26,11 +26,11 @@
 </template>
 
 <script>
-import RecipeCarousel from "@/components/RecipeCarousel";
+import ViewRecipeSite from "@/components/recipeviewcomponents/ViewRecipeSite";
 export default {
-  name: "HelloWorld",
+  name: "RecipeView",
   components: {
-    RecipeCarousel
+    ViewRecipeSite
   },
   props: ["title"],
 
