@@ -13,7 +13,11 @@ const routes = [
     name: "Home",
     component: Home
   },
-
+  {
+    path: "/airfry",
+    name: "Airfry",
+    component: () => import("@/views/AirFryRecipesView")
+  },
   {
     path: "/recipe/:recipe_id",
     name: "Recipe",
