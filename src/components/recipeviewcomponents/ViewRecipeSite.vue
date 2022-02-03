@@ -3,14 +3,21 @@
     <v-row justify="center">
       <v-col cols="12" md="6" lg="4">
         <v-card>
-          <v-card-text>
-            <v-list>
-              <v-list-item v-for="z in activerecipe.ingredients" :key="z.nr">
-                <v-list-item-title>
-                  <span v-if="z.menge">{{ z.menge }} - </span>{{ z.name }}
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
+          <v-img :src="activerecipe.imageSrc" width="100%" height="250"></v-img>
+          <v-card-text style="position: relative;">
+            <v-card
+              style="position: relative; top:-50px;margin-left:5px; margin-right: 5px;"
+              elevation="10"
+            >
+              <v-list>
+                <v-list-item v-for="z in activerecipe.ingredients" :key="z.nr">
+                  <v-list-item-title>
+                    <span v-if="z.menge">{{ z.menge }} - </span>
+                    <span v-else> - - </span>{{ z.name }}
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-card>
           </v-card-text>
           <v-divider />
           <v-card-text
