@@ -19,6 +19,7 @@ export default new Vuex.Store({
     user: null,
     menuItems: [
       { action: "mdi-food", title: "Abendessen", to: "/" },
+      { action: "mdi-french-fries", title: "AirFry", to: "/airfry" },
       { action: "mdi-floppy", title: "Rezept speichern", to: "/saveRecipe" },
       { action: "mdi-login", title: "LogIn", to: "Login" },
       { action: "mdi-upload", title: "Image Upload", to: "/upload" },
