@@ -16,6 +16,9 @@
                   errorMessage.text
                 }}</v-card-text
                 ><br />
+                <v-card-text>
+                  <v-btn text to="/register">Hier gehts zur Registrierung</v-btn>
+                </v-card-text>
                 <v-card-actions>
                   <v-btn type="submit">Login</v-btn>
                 </v-card-actions>
