@@ -7,6 +7,7 @@
             <v-card-title>Login</v-card-title>
             <v-card-text>
               <v-form ref="loginForm" @submit.prevent="logIn">
+                <v-text-field label="Email" v-model="email"></v-text-field>
                 <v-text-field
                   label="Password"
                   type="password"
@@ -17,7 +18,9 @@
                 }}</v-card-text
                 ><br />
                 <v-card-text>
-                  <v-btn text to="/register">Hier gehts zur Registrierung</v-btn>
+                  <v-btn text to="/register"
+                    >Hier gehts zur Registrierung</v-btn
+                  >
                 </v-card-text>
                 <v-card-actions>
                   <v-btn type="submit">Login</v-btn>
@@ -47,13 +50,14 @@ export default {
   name: "LoginPage",
   data: () => ({
     errorMessage: "",
+    email: "",
     password: ""
   }),
   methods: {
     logIn() {
       firebase
         .auth()
-        .signInWithEmailAndPassword("test@test.de", this.password) //testtest
+        .signInWithEmailAndPassword(this.email, this.password) //testtest
         .then(res => {
           this.$store.state.user = res.user;
           console.log("eingeloggt", res);
