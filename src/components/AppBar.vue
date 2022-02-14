@@ -24,6 +24,7 @@
     <v-btn icon @click="logOut"
       ><v-icon large :color="user ? 'green' : 'red'">mdi-account</v-icon></v-btn
     >
+    <p v-if="user">Hi - {{ userdata }}</p>
     <template v-if="$vuetify.breakpoint.mdAndUp" v-slot:extension>
       <v-tabs>
         <v-tabs-slider></v-tabs-slider>
@@ -38,6 +39,7 @@
 
 <script>
 import firebase from "firebase";
+import getUser from "@/plugins/getUser";
 
 export default {
   name: "AppBar",
@@ -60,6 +62,10 @@ export default {
   computed: {
     user() {
       return this.$store.getters.getUser;
+    },
+    userdata() {
+      console.log("userdata", getUser());
+      return getUser().email;
     },
     menuItems() {
       return this.$store.getters.menuItems;

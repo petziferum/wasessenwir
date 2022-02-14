@@ -1,7 +1,12 @@
 import firebase from "@/plugins/firebase";
 import User from "./User";
 
+
+
 export default class UserAuthentication {
+
+
+
   static userSignup(user, password) {
     return firebase
       .auth()
