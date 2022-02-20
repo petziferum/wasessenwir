@@ -1,12 +1,7 @@
-import firebase from "@/plugins/firebase";
+import firebase, { fireAuth } from "@/plugins/firebase";
 import User from "./User";
 
-
-
 export default class UserAuthentication {
-
-
-
   static userSignup(user, password) {
     return firebase
       .auth()
@@ -39,14 +34,29 @@ export default class UserAuthentication {
   }
 
   static getUserAccount(username) {
-    return firebase
-      .firestore()
-      .collection("users")
-      .doc(username)
-      .get()
-      .then(doc => {
-        console.log("get", doc.data());
-        return doc.data();
+    const isAuthenticated = fireAuth.currentUser;
+    console.info("auth?", isAuthenticated);
+    if (isAuthenticated) {
+      return firebase
+        .firestore()
+        .collection("users")
+        .doc(username)
+        .get()
+        .then(doc => {
+          console.log("get", doc.data());
+          return doc.data();
+        });
+    } else return new Promise(() => "lololo").then(() => "lololo");
+  }
+
+  static userSignout() {
+    return fireAuth
+      .signOut()
+      .then(() => {
+        return "ausgelogged";
+      })
+      .catch(error => {
+        console.error("Ein Fehler ist aufgetreten", error);
       });
   }
 }

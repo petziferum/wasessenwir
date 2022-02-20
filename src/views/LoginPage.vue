@@ -2,7 +2,7 @@
   <v-container>
     <v-row justify="center">
       <template v-if="user === null">
-        <v-col cols="12" sm="6" md="4" lg="3" class="text-center">
+        <v-col cols="12" sm="6" md="4" lg="6" class="text-center">
           <v-card>
             <v-card-title>Login</v-card-title>
             <v-card-text>
@@ -18,7 +18,7 @@
                 }}</v-card-text
                 ><br />
                 <v-card-text>
-                  <v-btn text to="/register"
+                  <v-btn text to="/register" outlined color="info"
                     >Hier gehts zur Registrierung</v-btn
                   >
                 </v-card-text>

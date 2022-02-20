@@ -4,6 +4,7 @@ import Recipe from "@/components/RecipeView";
 import Home from "../views/Home.vue";
 import UploadImage from "@/views/UploadImage";
 import Inventar from "@/views/Inventar";
+import { fireAuth } from "@/plugins/firebase";
 
 Vue.use(VueRouter);
 
@@ -69,7 +70,8 @@ const routes = [
   {
     path: "/userdashboard",
     name: "userdashboard",
-    component: () => import("@/components/authentication/UserDashboard")
+    component: () => import("@/components/authentication/UserDashboard"),
+    meta: { requiresAuth: true }
   }
 ];
 
@@ -77,6 +79,13 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const isAuthenticated = fireAuth.currentUser;
+  if (requiresAuth && !isAuthenticated) {
+    next("/login");
+  } else next();
 });
 
 export default router;

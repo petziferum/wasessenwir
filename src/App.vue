@@ -21,9 +21,9 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-content class="bg px-0 mx-0">
+    <v-main class="bg px-0 mx-0">
       <router-view />
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 

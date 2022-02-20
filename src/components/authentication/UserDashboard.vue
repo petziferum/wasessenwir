@@ -2,40 +2,47 @@
   <v-container>
     <v-card>
       <v-card-title>
+        Hi {{ currentUser.displayName }}
         <v-spacer />
-        <v-btn small text @click.prevent="getUser">petziferum</v-btn>
+        <v-btn small text outlined color="red" @click.prevent="logout"
+          >Log Out</v-btn
+        >
       </v-card-title>
-      <template v-if="user">
+      <v-card-subtitle>
+        <v-spacer />
+        <v-btn small text @click.prevent="getUser">Get User-Data</v-btn>
+      </v-card-subtitle>
+      <template v-if="userData">
         <v-card-text>
-          <v-text-field label="ID" :value="user.id" readonly></v-text-field>
+          <v-text-field label="ID" :value="userData.id" readonly></v-text-field>
           <v-text-field
-            label="userName"
-            :value="user.userName"
+            label="User Name"
+            :value="userData.userName"
             readonly
           ></v-text-field>
           <v-text-field
             label="lastLogin"
-            :value="user.lastLogin"
+            :value="Date(userData.lastLogin)"
             readonly
           ></v-text-field>
           <v-text-field
             label="email"
-            :value="user.email"
+            :value="userData.email"
             readonly
           ></v-text-field>
           <v-text-field
             label="recipes"
-            :value="user.recipes"
+            :value="userData.recipes"
             readonly
           ></v-text-field>
           <v-text-field
             label="firstName"
-            :value="user.firstName"
+            :value="userData.firstName"
             readonly
           ></v-text-field>
           <v-text-field
             label="lastName"
-            :value="user.lastName"
+            :value="userData.lastName"
             readonly
           ></v-text-field>
         </v-card-text>
@@ -46,19 +53,34 @@
 
 <script>
 import UserAuthentication from "@/components/authentication/UserAuthentication";
+import { fireAuth } from "@/plugins/firebase";
 
 export default {
   name: "UserDashboard",
   data: () => ({
-    user: null
+    userData: null
   }),
-  computed: {},
+  computed: {
+    currentUser() {
+      return fireAuth.currentUser;
+    }
+  },
   methods: {
     getUser() {
-      UserAuthentication.getUserAccount("petziferum").then(
-        res => (this.user = res)
-      );
+      UserAuthentication.getUserAccount("petziferum").then(res => {
+        console.log("Response", res);
+        this.userData = res;
+      });
+    },
+    logout() {
+      UserAuthentication.userSignout().then(() => {
+        this.$router.push("/");
+        this.$store.commit("SET_USER", null);
+      });
     }
+  },
+  mounted() {
+    this.getUser();
   }
 };
 </script>

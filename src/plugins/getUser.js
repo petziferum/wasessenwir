@@ -1,11 +1,10 @@
-
 import { fireAuth } from "@/plugins/firebase";
 import { User } from "firebase";
 
 let user = User;
 
 fireAuth.onAuthStateChanged(_user => {
-  console.log("user state changed: ", _user.email);
+  console.log("getUser - user state changed: ", _user.email);
   user = _user;
 });
 

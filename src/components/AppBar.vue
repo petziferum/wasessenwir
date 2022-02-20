@@ -21,7 +21,7 @@
     </div>
 
     <v-spacer></v-spacer>
-    <v-btn icon @click="logOut"
+    <v-btn icon to="/userdashboard"
       ><v-icon large :color="user ? 'green' : 'red'">mdi-account</v-icon></v-btn
     >
     <p v-if="user">Hi - {{ userdata }}</p>
@@ -38,33 +38,21 @@
 </template>
 
 <script>
-import firebase from "firebase";
 import getUser from "@/plugins/getUser";
+import {fireAuth} from "@/plugins/firebase";
 
 export default {
   name: "AppBar",
   data: () => ({
     logo: require("@/assets/fast-food.svg")
   }),
-  methods: {
-    logOut() {
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          return this.$store.commit("SET_USER", null);
-        })
-        .catch(function(error) {
-          console.error("An error happened", error);
-        });
-    }
-  },
+  methods: {},
   computed: {
     user() {
-      return this.$store.getters.getUser;
+      console.log("appbar user", fireAuth.currentUser)
+      return fireAuth.currentUser;
     },
     userdata() {
-      console.log("userdata", getUser());
       return getUser().email;
     },
     menuItems() {

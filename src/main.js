@@ -3,9 +3,9 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
-import * as firebase from "firebase";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import { fireAuth } from "@/plugins/firebase";
 Vue.config.productionTip = false;
 
 Vue.use(Toast, {
@@ -13,19 +13,14 @@ Vue.use(Toast, {
   draggable: true,
   position: "bottom-center"
 });
-
-new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App),
-  created() {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.$store.dispatch("autoLogin", user);
-      } else {
-        console.log("Not Signed in.");
-      }
-    });
+let app;
+fireAuth.onAuthStateChanged(() => {
+  if (!app) {
+    app = new Vue({
+      router,
+      store,
+      vuetify,
+      render: h => h(App)
+    }).$mount("#app");
   }
-}).$mount("#app");
+});
