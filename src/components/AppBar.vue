@@ -39,7 +39,6 @@
 
 <script>
 import getUser from "@/plugins/getUser";
-import {fireAuth} from "@/plugins/firebase";
 
 export default {
   name: "AppBar",
@@ -49,8 +48,7 @@ export default {
   methods: {},
   computed: {
     user() {
-      console.log("appbar user", fireAuth.currentUser)
-      return fireAuth.currentUser;
+      return this.$store.getters.getUser;
     },
     userdata() {
       return getUser().email;

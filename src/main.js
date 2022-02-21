@@ -14,13 +14,17 @@ Vue.use(Toast, {
   position: "bottom-center"
 });
 let app;
-fireAuth.onAuthStateChanged(() => {
+fireAuth.onAuthStateChanged((user) => {
+
   if (!app) {
     app = new Vue({
       router,
       store,
       vuetify,
-      render: h => h(App)
+      render: h => h(App),
+      created() {
+        this.$store.commit("SET_USER", user);
+      }
     }).$mount("#app");
   }
 });

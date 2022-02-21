@@ -99,7 +99,7 @@
               </v-dialog>
             </v-toolbar>
           </template>
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:item="{ item }">
             <v-icon class="mr-2" @click="editItem(item)">
               mdi-pencil
             </v-icon>
@@ -115,7 +115,7 @@
 
 <script>
 export default {
-  name: "Inventar",
+  name: "Inventar-Component",
   data: () => ({
     dialog: false,
     dialogDelete: false,

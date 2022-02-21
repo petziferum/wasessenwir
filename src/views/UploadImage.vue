@@ -30,7 +30,6 @@
 <script>
 import ImageUpload from "@/components/ImageUpload";
 export default {
-  name: "imageupload",
   components: {
     ImageUpload
   },

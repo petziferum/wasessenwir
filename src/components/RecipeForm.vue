@@ -42,15 +42,15 @@
                               ></v-text-field>
                             </v-form>
                             <v-btn x-small color="red" @click="deleteItem(i)"
-                              >delete</v-btn
-                            >
+                              >delete
+                            </v-btn>
                           </template>
                           <template v-else>
                             {{ item.name }}
                             <div class="float-right" v-if="editMode">
                               <v-btn class="mr-1" x-small @click="editItem = i"
-                                >edit</v-btn
-                              >
+                                >edit
+                              </v-btn>
                             </div>
                           </template>
                         </v-col>
@@ -83,9 +83,9 @@
                     placeholder="Zutat"
                   >
                     <template v-slot:append-outer>
-                      <v-btn rounded type="submit"
-                        ><v-icon>mdi-plus</v-icon></v-btn
-                      >
+                      <v-btn rounded type="submit">
+                        <v-icon>mdi-plus</v-icon>
+                      </v-btn>
                     </template>
                   </v-text-field>
                 </v-col>
@@ -121,8 +121,8 @@
             style="position: relative; top:-35px; left: 45%;"
             @click="addStepBetween(step.nr)"
             :key="`${i}+addStep`"
-            >+</v-btn
-          >
+            >+
+          </v-btn>
         </template>
         <div width="100%" class="ma-0 pa-0 text-center">
           <v-btn
@@ -130,15 +130,17 @@
             class="mx-auto rounded-b-pill"
             color="white"
             @click="addStep"
-            ><v-icon>mdi-plus</v-icon></v-btn
-          ><br />
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+          <br />
         </div>
       </v-sheet>
       <v-row>
         <v-col cols="12">
           <v-row>
-            <v-col cols="6"
-              ><v-btn outlined class="primary" @click="pickFile" dark>
+            <v-col cols="6">
+              <v-btn outlined class="primary" @click="pickFile" dark>
                 <v-icon left>mdi-camera-outline</v-icon>
                 Bild hochladen
               </v-btn>
@@ -159,15 +161,15 @@
                   </v-overlay>
                 </v-img>
                 <v-btn @click="uploadImage">upload</v-btn>
-              </div></v-col
-            >
+              </div>
+            </v-col>
             <v-divider vertical inset></v-divider>
-            <v-col cols="6"
-              ><v-toolbar class="ma-0"
-                ><v-toolbar-title class="font-weight-bold"
-                  >Rezept Bild</v-toolbar-title
-                ></v-toolbar
-              >
+            <v-col cols="6">
+              <v-toolbar class="ma-0">
+                <v-toolbar-title class="font-weight-bold"
+                  >Rezept Bild
+                </v-toolbar-title>
+              </v-toolbar>
               <span v-if="recipe.imageSrc">
                 <div>{{ recipe.imageName }}</div>
                 <v-img
@@ -192,17 +194,17 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn v-on="on" v-bind="attrs" @click="loadImages"
-                >Online Bilder</v-btn
-              >
+                >Online Bilder
+              </v-btn>
             </template>
             <v-card>
               <v-toolbar color="primary">
                 <v-toolbar-title>Bildergallerie</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items>
-                  <v-btn text @click="imageDialog = false"
-                    ><v-icon>mdi-close</v-icon></v-btn
-                  >
+                  <v-btn text @click="imageDialog = false">
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn>
                 </v-toolbar-items>
               </v-toolbar>
               <v-row>
@@ -213,9 +215,9 @@
                   v-for="(image, i) in imageGallery"
                   :key="i"
                 >
-                  <v-card link @click="addImageToRecipe(image)" rounded="xl"
-                    ><v-img :src="image.downloadUrl" cover></v-img
-                  ></v-card>
+                  <v-card link @click="addImageToRecipe(image)" rounded="xl">
+                    <v-img :src="image.downloadUrl" cover></v-img>
+                  </v-card>
                 </v-col>
               </v-row>
             </v-card>
@@ -278,7 +280,10 @@ import { timestamp, firestore, fireBucket } from "@/plugins/firebase";
 
 export default {
   name: "RecipeForm",
-  props: { recipe: Object, edit: Boolean },
+  props: {
+    recipeObject: Object,
+    edit: Boolean
+  },
   data: () => ({
     editMode: false,
     imageDialog: false,
@@ -469,8 +474,16 @@ export default {
     }
   },
   computed: {
-    user() {
-      return this.$store.getters.getUser;
+    recipes: {
+      get() {
+        return this.recipeObject;
+      },
+      set(event) {
+        this.$emit("input", event);
+      },
+      user() {
+        return this.$store.getters.getUser;
+      }
     }
   },
   beforeMount() {

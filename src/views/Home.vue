@@ -57,7 +57,7 @@
 <script>
 import firebase from "firebase";
 export default {
-  name: "Home",
+  name: "Home-Component",
   components: {},
   data: () => ({
     searchValue: "",
