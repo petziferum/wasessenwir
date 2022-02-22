@@ -304,6 +304,25 @@ export default {
     ],
     finishDialog: false
   }),
+  computed: {
+    recipe: {
+      get() {
+        return this.recipeObject;
+      },
+      set(event) {
+        this.$emit("input", event);
+      },
+      user() {
+        return this.$store.getters.getUser;
+      }
+    }
+  },
+  beforeMount() {
+    this.recipe.createdBy = this.user;
+    if (this.edit) {
+      this.editMode = this.edit;
+    }
+  },
   methods: {
     deleteItem(item) {
       const z = this.recipe.ingredients[item];
@@ -471,25 +490,6 @@ export default {
         this.finishDialog = true;
         this.$store.commit("loading", true);
       }
-    }
-  },
-  computed: {
-    recipes: {
-      get() {
-        return this.recipeObject;
-      },
-      set(event) {
-        this.$emit("input", event);
-      },
-      user() {
-        return this.$store.getters.getUser;
-      }
-    }
-  },
-  beforeMount() {
-    this.recipe.createdBy = this.user;
-    if (this.edit) {
-      this.editMode = this.edit;
     }
   }
 };

@@ -1,29 +1,6 @@
 <template>
   <v-container fluid>
-    <template v-if="user === null">
-      <v-col cols="12" sm="6" md="4" lg="3" xl="3" class="text-center">
-        <v-card>
-          <v-card-title>Login</v-card-title>
-          <v-card-text>
-            <v-form ref="loginForm" @submit.prevent="logIn">
-              <v-text-field
-                label="Password"
-                type="password"
-                v-model="password"
-              ></v-text-field>
-              <v-card-text style="color:#ff0000" v-if="errorMessage.state">{{
-                errorMessage.text
-              }}</v-card-text
-              ><br />
-              <v-card-actions>
-                <v-btn type="submit">Login</v-btn>
-              </v-card-actions>
-            </v-form>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </template>
-    <template v-else>
+    <template>
       <v-row justify="center">
         <v-col cols="11" md="8" lg="6">
           <v-card tile class="my-2">
@@ -36,7 +13,7 @@
                 <v-col cols="12">
                   <RecipeForm
                     :edit="true"
-                    :recipe="newRecipe"
+                    :recipeObject="newRecipe"
                     v-on:saveRecipe="saveFile"
                   ></RecipeForm>
                 </v-col>

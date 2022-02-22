@@ -14,8 +14,7 @@ Vue.use(Toast, {
   position: "bottom-center"
 });
 let app;
-fireAuth.onAuthStateChanged((user) => {
-
+fireAuth.onAuthStateChanged(user => {
   if (!app) {
     app = new Vue({
       router,

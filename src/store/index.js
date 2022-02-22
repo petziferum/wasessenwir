@@ -21,9 +21,9 @@ export default new Vuex.Store({
       { action: "mdi-food", title: "Abendessen", to: "/" },
       { action: "mdi-french-fries", title: "AirFry", to: "/airfry" },
       { action: "mdi-floppy", title: "Rezept speichern", to: "/saveRecipe" },
-      { action: "mdi-login", title: "LogIn", to: "Login" },
       { action: "mdi-upload", title: "Image Upload", to: "/upload" },
-      { action: "mdi-form-select", title: "Inventar", to: "/inventar" }
+      { action: "mdi-form-select", title: "Inventar", to: "/inventar" },
+      { action: "mdi-login", title: "LogIn", to: "Login" }
     ],
     foodTable: {
       headers: [

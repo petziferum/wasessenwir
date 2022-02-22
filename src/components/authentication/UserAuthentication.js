@@ -33,18 +33,21 @@ export default class UserAuthentication {
       });
   }
 
-  static getUserAccount(username) {
+  static getUserAccount(userId) {
     const isAuthenticated = fireAuth.currentUser;
-    console.info("auth?", isAuthenticated);
     if (isAuthenticated) {
       return firebase
         .firestore()
         .collection("users")
-        .doc(username)
+        .where("id", "==", userId)
         .get()
         .then(doc => {
-          console.log("get", doc.data());
-          return doc.data();
+          let data;
+          doc.forEach(user => {
+            console.log("get user.data()", user.data());
+            data = user.data();
+          });
+          return data;
         });
     } else return new Promise(() => "lololo").then(() => "lololo");
   }

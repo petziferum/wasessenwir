@@ -25,9 +25,10 @@ const routes = [
     component: Recipe
   },
   {
-    path: "/saveRecipe",
-    name: "newRecipe",
-    component: () => import("@/views/SaveRecipe")
+    path: "/saverecipe",
+    name: "saverecipe",
+    component: () => import("@/views/SaveRecipe"),
+    meta: { requiresAuth: true, frompath: "/saverecipe" }
   },
   {
     path: "/edit/:id",
@@ -71,7 +72,7 @@ const routes = [
     path: "/userdashboard",
     name: "userdashboard",
     component: () => import("@/components/authentication/UserDashboard"),
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, frompath: "/userdashboard" }
   }
 ];
 
@@ -84,7 +85,8 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const isAuthenticated = fireAuth.currentUser;
   if (requiresAuth && !isAuthenticated) {
-    next("/login");
+    const querypath = to.meta.frompath;
+    next({ name: "login", query: { from: querypath } });
   } else next();
 });
 

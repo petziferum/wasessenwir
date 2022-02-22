@@ -60,13 +60,11 @@ export default {
         .signInWithEmailAndPassword(this.email, this.password) //testtest
         .then(res => {
           this.$store.state.user = res.user;
-          console.log("eingeloggt", res);
-          this.$router.push("/");
+          this.$router.push(this.$route.query.from || "/");
         })
         .catch(error => {
           this.errorMessage.state = true;
           this.errorMessage.text = error;
-
           console.error("fehler", error);
         })
         .finally(() => {

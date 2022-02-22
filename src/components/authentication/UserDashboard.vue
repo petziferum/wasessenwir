@@ -67,8 +67,9 @@ export default {
   },
   methods: {
     getUser() {
-      UserAuthentication.getUserAccount("petziferum").then(res => {
-        console.log("Response", res);
+      const uid = this.currentUser.uid;
+      UserAuthentication.getUserAccount(uid).then(res => {
+        console.log("Dashboard-getUser: ", uid, " Response: ", res);
         this.userData = res;
       });
     },
