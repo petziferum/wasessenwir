@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="pa-0">
     <v-toolbar class="ma-0">
-      <v-toolbar-title>Rezept bearbeiten</v-toolbar-title>
+      <v-toolbar-title>Rezept bearbeiten - loading: {{ loading }}</v-toolbar-title>
       <v-toolbar-items slot="extension">
         <v-btn @click="$router.back()">
           <v-icon>mdi-arrow-left-bold-outline</v-icon>
@@ -22,8 +22,9 @@
           ></v-skeleton-loader>
         </template>
         <template v-else>
+          {{ recipe.recipeName }}
           <recipe-form
-            :recipe="recipe"
+            :recipe-object="recipe"
             :edit="true"
             v-on:saveRecipe="updateRecipe"
           ></recipe-form>
@@ -86,13 +87,15 @@ export default {
       console.info("lade...");
       let recipeRef = firestore.collection("recipes").doc(id);
 
-      recipeRef.get().then(doc => {
-        let r = doc.data();
-        this.recipe = r;
-        this.recipe.id = doc.id;
-        this.loading = false;
-        console.log("Rezept geladen", r);
-      });
+      recipeRef
+        .get()
+        .then(doc => {
+          let r = doc.data();
+          this.recipe = r;
+          this.recipe.id = doc.id;
+          console.log("Rezept geladen", r);
+        })
+        .finally(() => (this.loading = false));
     }
   },
   watch: {

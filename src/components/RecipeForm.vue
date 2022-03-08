@@ -274,7 +274,6 @@
     </v-form>
   </v-card>
 </template>
-
 <script>
 import { timestamp, firestore, fireBucket } from "@/plugins/firebase";
 
@@ -318,10 +317,14 @@ export default {
     }
   },
   beforeMount() {
-    this.recipe.createdBy = this.user;
+    //this.recipe.createdBy = this.user;
+    console.log("recipeForm:", this.recipeObject);
     if (this.edit) {
       this.editMode = this.edit;
     }
+  },
+  mounted() {
+    console.log("recipeForm mounted: ", this.recipeObject);
   },
   methods: {
     deleteItem(item) {
