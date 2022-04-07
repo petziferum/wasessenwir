@@ -86,6 +86,20 @@ export default {
     filled: [v => v != "" || "Field must not be empty"],
     finishDialog: false
   }),
+  computed: {
+    onlineRecipes() {
+      return this.$store.getters.getRecipes;
+    },
+    loading() {
+      return this.$store.getters.loading;
+    },
+    user() {
+      return this.$store.getters.getUser;
+    }
+  },
+  beforeMount() {
+    this.$store.dispatch("getRecipes");
+  },
   methods: {
     getonlinerecipes() {
       this.$store.dispatch("getRecipes");
@@ -117,7 +131,8 @@ export default {
       };
       this.newRecipe = recipeClear;
       this.finishDialog = false;
-
+      console.log("this.user.id", this.user.uid);
+      emittedRecipe.createdBy = this.user.uid;
       let input = emittedRecipe;
       console.log("emittedRecipe", emittedRecipe);
       //const metadata = { contentType: "image/jpeg" }
@@ -168,20 +183,7 @@ export default {
         });
     }
   },
-  computed: {
-    onlineRecipes() {
-      return this.$store.getters.getRecipes;
-    },
-    loading() {
-      return this.$store.getters.loading;
-    },
-    user() {
-      return this.$store.getters.getUser;
-    }
-  },
-  beforeMount() {
-    this.$store.dispatch("getRecipes");
-  }
+
 };
 </script>
 
@@ -194,7 +196,7 @@ export default {
 }
 .slide-enter {
   height: 0;
-  transform: rotateX(24deg);
+  transform: rotate(24deg);
 }
 .slide {
 }

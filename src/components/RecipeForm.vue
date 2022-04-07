@@ -310,15 +310,15 @@ export default {
       },
       set(event) {
         this.$emit("input", event);
-      },
-      user() {
-        return this.$store.getters.getUser;
       }
+    },
+    user() {
+      return this.$store.getters.getUser;
     }
   },
   beforeMount() {
-    //this.recipe.createdBy = this.user;
-    console.log("recipeForm:", this.recipeObject);
+    this.recipe.createdBy = this.user.uid;
+    console.log("recipeForm:", this.user.uid, this.recipeObject);
     if (this.edit) {
       this.editMode = this.edit;
     }
@@ -490,6 +490,7 @@ export default {
         this.finishDialog
       );
       if (this.$refs.form.validate()) {
+        console.log("valid");
         this.finishDialog = true;
         this.$store.commit("loading", true);
       }

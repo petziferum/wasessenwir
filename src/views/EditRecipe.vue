@@ -66,7 +66,7 @@ export default {
         });
     },
     updateRecipe(daten) {
-      console.log("empfangen", daten.id);
+      console.log("empfangen", daten.id, daten.createdBy);
 
       firestore
         .collection("recipes")
