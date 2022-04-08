@@ -11,6 +11,7 @@
       <v-card-subtitle>
         <v-spacer />
         <v-btn small text @click.prevent="getUser">Get User-Data</v-btn>
+        <v-btn small text @click="updateUser">Update User</v-btn>
       </v-card-subtitle>
       <template v-if="userData">
         <v-card-text>
@@ -37,28 +38,39 @@
           ></v-text-field>
           <v-text-field
             label="firstName"
-            :value="userData.firstName"
-            readonly
+            v-model="userData.firstName"
           ></v-text-field>
           <v-text-field
             label="lastName"
-            :value="userData.lastName"
-            readonly
+            v-model="userData.lastName"
           ></v-text-field>
         </v-card-text>
       </template>
+    </v-card>
+    <!-- Rezepte des Benutzers -->
+    <v-card class="mt-4">
+      <v-card-title>
+        Benutzerrezepte
+      </v-card-title>
+      <v-card-subtitle>
+        <v-btn small @click="getUserRecipes">Rezepte laden</v-btn>
+      </v-card-subtitle>
+      <v-card-text>
+        <div v-for="r in userRecipes" :key="r.id">{{ r.recipeName }}</div>
+      </v-card-text>
     </v-card>
   </v-container>
 </template>
 
 <script>
 import UserAuthentication from "@/components/authentication/UserAuthentication";
-import { fireAuth } from "@/plugins/firebase";
+import { fireAuth, firestore } from "@/plugins/firebase";
 
 export default {
   name: "UserDashboard",
   data: () => ({
-    userData: null
+    userData: null,
+    userRecipes: []
   }),
   computed: {
     currentUser() {
@@ -66,12 +78,50 @@ export default {
     }
   },
   methods: {
+    async getUserRecipes() {
+      this.userRecipes = [];
+      const rezepte = this.userData.recipes;
+      await Promise.all(
+        rezepte.map(async rid => {
+          await this.getRecipe(rid)
+            .then(res => {
+              this.userRecipes.push(res.data());
+            })
+            .catch(error => {
+              console.error("Rezept mit Id: ", rid, " nicht gefunden\n", error);
+            });
+        })
+      );
+      console.log("Rezepte fertig geladen!");
+    },
+    async getRecipe(recipeId) {
+      return await firestore
+        .collection("recipes")
+        .doc(recipeId)
+        .get();
+    },
     getUser() {
       const uid = this.currentUser.uid;
-      UserAuthentication.getUserAccount(uid).then(res => {
-        console.log("Dashboard-getUser: ", uid, " Response: ", res);
-        this.userData = res;
-      });
+      UserAuthentication.getUserAccount(uid)
+        .then(res => {
+          this.userData = res;
+        })
+        .then(() => {
+          this.getUserRecipes();
+        });
+    },
+    updateUser() {
+      const user = this.userData.userName;
+
+      const userRef = firestore.collection("users").doc(user);
+      userRef
+        .update({
+          firstName: this.userData.firstName,
+          lastName: this.userData.lastName
+        })
+        .then(() => {
+          this.getUser();
+        });
     },
     logout() {
       UserAuthentication.userSignout().then(() => {
