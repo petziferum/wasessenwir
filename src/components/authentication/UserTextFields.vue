@@ -1,31 +1,37 @@
 <template>
   <v-card class="ma-1">
     <v-card-text>
-      <v-text-field label="ID" :value="user.id" readonly></v-text-field>
+      <v-text-field
+        label="ID"
+        :value="user.id"
+        readonly
+        disabled
+      ></v-text-field>
       <v-text-field
         label="User Name"
         :value="user.userName"
         readonly
+        disabled
       ></v-text-field>
       <v-text-field
         label="lastLogin"
         :value="Date(user.lastLogin)"
         readonly
+        disabled
       ></v-text-field>
       <v-text-field
         label="email"
         :value="user.email"
         readonly
+        disabled
       ></v-text-field>
       <v-text-field
         label="recipes"
         :value="user.recipes"
         readonly
+        disabled
       ></v-text-field>
-      <v-text-field
-        label="firstName"
-        v-model="user.firstName"
-      ></v-text-field>
+      <v-text-field label="firstName" v-model="user.firstName"></v-text-field>
       <v-text-field label="lastName" v-model="user.lastName"></v-text-field>
     </v-card-text>
   </v-card>
