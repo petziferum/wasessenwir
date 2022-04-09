@@ -16,41 +16,7 @@
       <template v-if="userData">
         <v-row>
           <v-col cols="6">
-            <v-card-text>
-              <v-text-field
-                label="ID"
-                :value="userData.id"
-                readonly
-              ></v-text-field>
-              <v-text-field
-                label="User Name"
-                :value="userData.userName"
-                readonly
-              ></v-text-field>
-              <v-text-field
-                label="lastLogin"
-                :value="Date(userData.lastLogin)"
-                readonly
-              ></v-text-field>
-              <v-text-field
-                label="email"
-                :value="userData.email"
-                readonly
-              ></v-text-field>
-              <v-text-field
-                label="recipes"
-                :value="userData.recipes"
-                readonly
-              ></v-text-field>
-              <v-text-field
-                label="firstName"
-                v-model="userData.firstName"
-              ></v-text-field>
-              <v-text-field
-                label="lastName"
-                v-model="userData.lastName"
-              ></v-text-field>
-            </v-card-text>
+            <user-text-fields :user-data="userData" />
           </v-col>
           <v-col cols="6">
             <recipe-list-view
@@ -71,10 +37,11 @@
 import UserAuthentication from "@/components/authentication/UserAuthentication";
 import { fireAuth, firestore } from "@/plugins/firebase";
 import RecipeListView from "@/components/recipeviewcomponents/RecipeListView";
+import UserTextFields from "@/components/authentication/UserTextFields";
 
 export default {
   name: "UserDashboard",
-  components: { RecipeListView },
+  components: { UserTextFields, RecipeListView },
   data: () => ({
     userData: null,
     userRecipes: []
