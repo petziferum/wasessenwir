@@ -3,27 +3,28 @@
     <v-row no-gutters style="border-bottom: solid 4px white;">
       <v-img
         :src="require('../assets/textlogo.png')"
-        class="logobanner my-0 pa-0"
-        min-height="300px"
-        max-height="480"
+        class="logobanner"
+        position="center"
+        min-height="400px"
+        max-height="500"
       >
-        <v-row justify="center" class="search" no-gutters>
-          <v-col cols="11" md="6">
-            <v-form ref="searchForm" @submit.prevent="search">
-              <v-text-field
-                class="textfield"
-                background-color="#ffeeca"
-                filled
-                rounded
-                v-model="searchValue"
-                id="search-item"
-                label="Rezept suchen"
-                prepend-inner-icon="mdi-magnify"
-              ></v-text-field>
-            </v-form>
-          </v-col>
-        </v-row>
       </v-img>
+    </v-row>
+    <v-row justify="center" class="searchBox" no-gutters>
+      <v-col cols="11" md="6" class="searchForm">
+        <v-form ref="searchForm" @submit.prevent="search">
+          <v-text-field
+            class="textfield"
+            background-color="#ffeeca"
+            filled
+            rounded
+            v-model="searchValue"
+            id="search-item"
+            label="Rezept suchen"
+            prepend-inner-icon="mdi-magnify"
+          ></v-text-field>
+        </v-form>
+      </v-col>
     </v-row>
 
     <v-row v-if="loading">
@@ -130,11 +131,19 @@ export default {
 </script>
 <style>
 .logobanner {
-}
-.search {
   position: absolute;
+}
+.searchBox {
+  position: relative;
+  margin: 10em;
   bottom: 0;
   width: 100%;
+  min-height: 400px;
+  max-height: 500px;
+}
+.searchForm {
+  position: absolute;
+  bottom: 0;
 }
 .textfield {
   width: 100%;

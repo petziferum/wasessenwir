@@ -5,9 +5,12 @@
         <v-btn color="primary" @click="$router.back()">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <div class="mx-auto display-1">
+        <div class="mx-auto headline">
           {{ activeRecipe.recipeName }}
         </div>
+        <v-btn icon>
+          <v-icon @click="editMode = !editMode">mdi-pencil</v-icon>
+        </v-btn>
       </v-toolbar>
       <v-row no-gutters>
         <v-col cols="12">
@@ -18,7 +21,7 @@
           ></v-skeleton-loader>
         </v-col>
         <v-col cols="12" v-if="!loading" class="pa-0 ma-0">
-          <view-recipe-site :activerecipe="activeRecipe" />
+          <view-recipe-site :edit="editMode" :activerecipe="activeRecipe" />
         </v-col>
       </v-row>
     </v-col>
@@ -36,7 +39,8 @@ export default {
 
   data() {
     return {
-      recipeId: this.$route.params.recipe_id
+      recipeId: this.$route.params.recipe_id,
+      editMode: false
     };
   },
   methods: {

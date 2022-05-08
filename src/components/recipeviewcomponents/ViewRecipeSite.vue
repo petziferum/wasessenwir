@@ -25,7 +25,11 @@
             :key="text.nr"
             class="text-body-1"
           >
-            {{ text.nr }}. {{ text.text }}
+            <v-row>
+              <v-col cols="1">{{ text.nr }}.</v-col>
+              <v-col cols="10">{{ text.text }}</v-col>
+              <v-col cols="1"><v-icon v-if="edit" small>mdi-pencil</v-icon></v-col>
+            </v-row>
           </v-card-text>
         </v-card>
       </v-col>
@@ -36,7 +40,7 @@
 <script>
 export default {
   name: "ViewRecipeSite",
-  props: ["activerecipe"],
+  props: ["activerecipe", "edit"],
   data: () => ({}),
   methods: {},
   computed: {
