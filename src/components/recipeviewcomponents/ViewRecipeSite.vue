@@ -23,14 +23,26 @@
           <v-card-text
             v-for="text in activerecipe.recipeDescription"
             :key="text.nr"
-            class="text-body-1"
+            class="text-body-1 elevation-2"
           >
             <v-row>
               <v-col cols="1">{{ text.nr }}.</v-col>
-              <v-col cols="10">{{ text.text }}</v-col>
+              <v-col cols="10">
+                <template v-if="editItemNumber === text.nr">
+                  <v-textarea v-model="editItemText"></v-textarea>
+                  <v-spacer />
+                  <div style="text-align: right;">
+                    <v-btn class="mr-2" color="error" @click="cancel"
+                      >Abbrechen</v-btn
+                    >
+                    <v-btn color="success" @click="save">Speichern</v-btn>
+                  </div>
+                </template>
+                <template v-else>{{ text.text }} </template></v-col
+              >
               <v-col cols="1">
                 <template v-if="edit">
-                  <v-btn icon @click="editStep"
+                  <v-btn icon @click="editStep(text.nr)"
                     ><v-icon small>mdi-pencil</v-icon></v-btn
                   >
                 </template>
@@ -47,10 +59,31 @@
 export default {
   name: "ViewRecipeSite",
   props: ["activerecipe", "edit"],
-  data: () => ({}),
+  data: () => ({
+    editItemNumber: null,
+    editItemText: ""
+  }),
   methods: {
-    editStep() {
-      console.info("editStep");
+    editStep(nr) {
+      console.info("editStep", nr, this.recipe.recipeDescription[nr - 1]);
+      if (this.editItemNumber === nr) {
+        this.cancel();
+      } else {
+        this.editItemNumber = nr;
+        this.editItemText = this.recipe.recipeDescription[nr - 1].text;
+      }
+    },
+
+    cancel() {
+      this.editItemNumber = null;
+      this.editItemText = "";
+    },
+
+    save() {
+      this.recipe.recipeDescription[
+        this.editItemNumber - 1
+      ].text = this.editItemText;
+      this.editItemNumber = null;
     }
   },
   computed: {
