@@ -56,6 +56,8 @@
 </template>
 
 <script>
+import { firestore } from "@/plugins/firebase";
+
 export default {
   name: "ViewRecipeSite",
   props: ["activerecipe", "edit"],
@@ -83,7 +85,20 @@ export default {
       this.recipe.recipeDescription[
         this.editItemNumber - 1
       ].text = this.editItemText;
-      this.editItemNumber = null;
+
+      firestore
+        .collection("recipes")
+        .doc(this.recipe.id)
+        .update(this.recipe)
+        .then(() => {
+          console.log("geupdated", this.recipe);
+        })
+        .catch(error => {
+          console.error(error);
+        })
+        .finally(() => {
+          this.editItemNumber = null;
+        });
     }
   },
   computed: {
