@@ -27,11 +27,10 @@ export default {
   name: "RecipeListView",
   props: ["userData", "userRecipes"],
   components: { SmallRecipeCard },
-  data: () => ({
-  }),
+  data: () => ({}),
   methods: {
     getUserRecipes() {
-      this.$emit("getRecipes")
+      this.$emit("getRecipes");
     }
   }
 };

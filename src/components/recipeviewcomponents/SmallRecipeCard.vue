@@ -4,10 +4,7 @@
       <v-app-bar flat color="rgba(0, 0, 0, 0.5)">
         <v-menu offset-y>
           <template v-slot:activator="{ on }">
-            <v-app-bar-nav-icon
-                color="white"
-                v-on="on"
-            ></v-app-bar-nav-icon>
+            <v-app-bar-nav-icon color="white" v-on="on"></v-app-bar-nav-icon>
           </template>
           <v-card>
             <v-card-text>{{ r }}</v-card-text>
@@ -32,10 +29,8 @@
 <script>
 export default {
   name: "SmallRecipeCard",
-  props: (["r"])
-}
+  props: ["r"]
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
