@@ -7,7 +7,7 @@
       >
       </v-app-bar-nav-icon>
       <v-img
-        alt="Seiten Logo"
+        alt="logo"
         class="ma-0 pa-0"
         :src="logo"
         contain
@@ -15,9 +15,6 @@
         height="60"
         width="100"
       />
-      <v-card-title class="font-weight-black text-uppercase">
-        Rezept-o-Mat
-      </v-card-title>
     </div>
 
     <v-spacer></v-spacer>
