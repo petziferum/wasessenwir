@@ -28,7 +28,13 @@
             <v-row>
               <v-col cols="1">{{ text.nr }}.</v-col>
               <v-col cols="10">{{ text.text }}</v-col>
-              <v-col cols="1"><v-icon v-if="edit" small>mdi-pencil</v-icon></v-col>
+              <v-col cols="1">
+                <template v-if="edit">
+                  <v-btn icon @click="editStep"
+                    ><v-icon small>mdi-pencil</v-icon></v-btn
+                  >
+                </template>
+              </v-col>
             </v-row>
           </v-card-text>
         </v-card>
@@ -42,7 +48,11 @@ export default {
   name: "ViewRecipeSite",
   props: ["activerecipe", "edit"],
   data: () => ({}),
-  methods: {},
+  methods: {
+    editStep() {
+      console.info("editStep");
+    }
+  },
   computed: {
     recipe: {
       get: function() {
