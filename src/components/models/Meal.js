@@ -1,5 +1,5 @@
 export default class Meal {
-  user;
+  createdBy;
 
   constructor() {}
 
@@ -12,8 +12,7 @@ export default class Meal {
     NewMeal._ingredients = obj.ingredients;
     NewMeal._time = obj.time;
     NewMeal.id = obj.id;
-    NewMeal._user = obj.createdBy;
-
+    NewMeal.createdBy = obj.createdBy;
     const altImg =
       "https://firebasestorage.googleapis.com/v0/b/recipes-petzi.appspot.com/o/recipes%2FlA9WImx43nlzRvPHudLB.png?alt=media&token=dc0237ce-25e1-4122-8316-13abbbc20003";
     if (NewMeal._imageSrc == undefined) {

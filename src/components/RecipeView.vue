@@ -10,7 +10,7 @@
         </div>
         <div v-else class="mx-auto headline">
           {{ activeRecipe.recipeName }}
-          <div v-if="editMode">{{ activeRecipe.id }}</div>
+          <div v-if="editMode">created by User: {{ user.firstName }} {{ user.lastName }}</div>
         </div>
         <v-btn icon>
           <v-icon @click="editMode = !editMode">mdi-pencil</v-icon>
@@ -34,6 +34,8 @@
 
 <script>
 import ViewRecipeSite from "@/components/recipeviewcomponents/ViewRecipeSite";
+import {firestore} from "@/plugins/firebase";
+
 export default {
   name: "RecipeView",
   components: {
@@ -44,13 +46,30 @@ export default {
   data() {
     return {
       recipeId: this.$route.params.recipe_id,
-      editMode: false
+      editMode: false,
+      user: null,
     };
   },
   methods: {
     loadRecipe() {
-      this.$store.dispatch("loadSingleRecipe", this.recipeId).then(() => {});
+      this.$store.dispatch("loadSingleRecipe", this.recipeId).then(() => {
+        this.loadUser(this.activeRecipe.createdBy);
+      });
     },
+
+    loadUser(user) {
+      console.log("user: ", user);
+      const userRef = firestore.collection("users");
+      userRef
+        .where("id", "==", user.id)
+        .get()
+        .then(userSnap => {
+          userSnap.forEach(user => {
+            this.user = user.data()
+          });
+        });
+    },
+
     updateId() {
       this.recipeId = this.$route.params.recipe_id;
       console.log("aufgerufen", this.$route.params.recipe_id);
