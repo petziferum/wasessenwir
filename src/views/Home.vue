@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="pa-0">
-    <v-row no-gutters style="border-bottom: solid 4px white;">
+    <v-row no-gutters style="border-bottom: solid 5px white;">
       <v-img
         :src="require('../assets/textlogo.png')"
         class="logobanner"
@@ -8,24 +8,25 @@
         min-height="400px"
         max-height="500"
       >
+        <v-row justify="center" class="searchBox" no-gutters>
+          <v-col cols="11" md="6" class="searchForm">
+            <v-form ref="searchForm" @submit.prevent="search">
+              <v-text-field
+                  class="textfield"
+                  background-color="#ffeeca"
+                  filled
+                  rounded
+                  v-model="searchValue"
+                  id="search-item"
+                  label="Rezept suchen"
+                  prepend-inner-icon="mdi-magnify"
+              ></v-text-field>
+            </v-form>
+          </v-col>
+        </v-row>
       </v-img>
     </v-row>
-    <v-row justify="center" class="searchBox" no-gutters>
-      <v-col cols="11" md="6" class="searchForm">
-        <v-form ref="searchForm" @submit.prevent="search">
-          <v-text-field
-            class="textfield"
-            background-color="#ffeeca"
-            filled
-            rounded
-            v-model="searchValue"
-            id="search-item"
-            label="Rezept suchen"
-            prepend-inner-icon="mdi-magnify"
-          ></v-text-field>
-        </v-form>
-      </v-col>
-    </v-row>
+
 
     <v-row v-if="loading">
       <v-col v-for="n in 4" :key="n" cols="12" sm="8" md="6" lg="4">
@@ -131,15 +132,13 @@ export default {
 </script>
 <style>
 .logobanner {
-  position: absolute;
+  position: relative;
 }
 .searchBox {
   position: relative;
   margin: 10em;
-  bottom: 0;
   width: 100%;
-  min-height: 400px;
-  max-height: 500px;
+  height: 100%;
 }
 .searchForm {
   position: absolute;
