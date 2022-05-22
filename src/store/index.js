@@ -2,7 +2,8 @@ import Vue from "vue";
 import Vuex from "vuex";
 import Question from "../components/models/question";
 import recipesStore from "./modules/recipesStore";
-import { firestore, fireBucket } from "@/plugins/firebase";
+import {fireBucket, firestore} from "@/plugins/firebase";
+import Meal from "@/components/models/Meal";
 
 Vue.use(Vuex);
 
@@ -89,14 +90,15 @@ export default new Vuex.Store({
       let recipeRef = firestore.collection("recipes").doc(id);
       recipeRef.get().then(doc => {
         let recipeData = doc.data();
+        const recipe = Meal.createNewMeal(recipeData);
 
-        commit("SET_ACTIVE_RECIPE", recipeData);
+        commit("SET_ACTIVE_RECIPE", recipe);
         setTimeout(() => commit("loading", false), 200);
       });
     },
+
     loadImages({ commit }) {
-      let storage = fireBucket;
-      let storageRef = storage.ref();
+      let storageRef = fireBucket.ref();
       let listRef = storageRef.child("recipes");
       listRef.listAll().then(res => {
         let image = [];

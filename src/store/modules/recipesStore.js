@@ -27,6 +27,7 @@ export default {
       });
       commit("setofflineMeals", recipelist);
     },
+
     getRecipes({ commit, state }) {
       state.recipes = [];
       let payload = [];
@@ -53,13 +54,8 @@ export default {
         .finally(() => {
           commit("loading", false);
         });
-
-      /*imageRef.listAll().then(res => {
-              res.items.forEach(el => {
-                console.log("el", el);
-              });
-            }); */
     },
+
     setMeal: ({ commit }) => {
       let zahl = MealData.length;
       let rand = Math.floor(Math.random() * zahl); // rand ist random 0 bis 2 und wird dem MealData als Index übergeben. MealData[0], MealData[1] usw...

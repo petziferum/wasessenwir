@@ -12,21 +12,20 @@
           <v-col cols="11" md="6" class="searchForm">
             <v-form ref="searchForm" @submit.prevent="search">
               <v-text-field
-                  class="textfield"
-                  background-color="#ffeeca"
-                  filled
-                  rounded
-                  v-model="searchValue"
-                  id="search-item"
-                  label="Rezept suchen"
-                  prepend-inner-icon="mdi-magnify"
+                class="textfield"
+                background-color="#ffeeca"
+                filled
+                rounded
+                v-model="searchValue"
+                id="search-item"
+                label="Rezept suchen"
+                prepend-inner-icon="mdi-magnify"
               ></v-text-field>
             </v-form>
           </v-col>
         </v-row>
       </v-img>
     </v-row>
-
 
     <v-row v-if="loading">
       <v-col v-for="n in 4" :key="n" cols="12" sm="8" md="6" lg="4">

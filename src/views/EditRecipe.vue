@@ -1,7 +1,9 @@
 <template>
   <v-container fluid class="pa-0">
     <v-toolbar class="ma-0">
-      <v-toolbar-title>Rezept bearbeiten - loading: {{ loading }}</v-toolbar-title>
+      <v-toolbar-title
+        >Rezept bearbeiten - loading: {{ loading }}</v-toolbar-title
+      >
       <v-toolbar-items slot="extension">
         <v-btn @click="$router.back()">
           <v-icon>mdi-arrow-left-bold-outline</v-icon>

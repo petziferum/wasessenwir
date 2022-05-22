@@ -182,8 +182,7 @@ export default {
           this.$store.dispatch("getRecipes");
         });
     }
-  },
-
+  }
 };
 </script>
 

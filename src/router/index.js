@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Recipe from "@/components/RecipeView";
+import RecipeView from "@/components/RecipeView";
 import Home from "../views/Home.vue";
 import UploadImage from "@/views/UploadImage";
 import Inventar from "@/views/Inventar";
@@ -22,7 +22,7 @@ const routes = [
   {
     path: "/recipe/:recipe_id",
     name: "Recipe",
-    component: Recipe
+    component: RecipeView
   },
   {
     path: "/saverecipe",
