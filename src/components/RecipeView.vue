@@ -5,19 +5,23 @@
         <v-btn color="primary" @click="$router.back()">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <div class="mx-auto headline">
+        <div v-if="loading" class="mx-auto headline">
+          <v-skeleton-loader type="sentences" width="450"></v-skeleton-loader>
+        </div>
+        <div v-else class="mx-auto headline">
           {{ activeRecipe.recipeName }}
+          <div v-if="editMode">{{ activeRecipe.id }}</div>
         </div>
         <v-btn icon>
           <v-icon @click="editMode = !editMode">mdi-pencil</v-icon>
         </v-btn>
       </v-toolbar>
-      <v-row no-gutters>
-        <v-col cols="12">
+      <v-row no-gutters justify="center">
+        <v-col cols="12" md="6" lg="4">
           <v-skeleton-loader
             v-if="loading"
             class="mt-10"
-            type="article, actions"
+            type="image, article, article, actions"
           ></v-skeleton-loader>
         </v-col>
         <v-col cols="12" v-if="!loading" class="pa-0 ma-0">
@@ -45,7 +49,7 @@ export default {
   },
   methods: {
     loadRecipe() {
-      this.$store.dispatch("loadSingleRecipe", this.recipeId);
+      this.$store.dispatch("loadSingleRecipe", this.recipeId).then(() => {});
     },
     updateId() {
       this.recipeId = this.$route.params.recipe_id;

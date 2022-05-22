@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import Question from "../components/models/question";
 import recipesStore from "./modules/recipesStore";
-import {fireBucket, firestore} from "@/plugins/firebase";
+import { fireBucket, firestore } from "@/plugins/firebase";
 import Meal from "@/components/models/Meal";
 
 Vue.use(Vuex);
@@ -93,7 +93,7 @@ export default new Vuex.Store({
         const recipe = Meal.createNewMeal(recipeData);
 
         commit("SET_ACTIVE_RECIPE", recipe);
-        setTimeout(() => commit("loading", false), 200);
+        setTimeout(() => commit("loading", false), 100);
       });
     },
 
