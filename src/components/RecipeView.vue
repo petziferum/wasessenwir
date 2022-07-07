@@ -10,7 +10,9 @@
         </div>
         <div v-else class="mx-auto headline">
           {{ activeRecipe.recipeName }}
-          <div v-if="editMode">created by User: {{ user.firstName }} {{ user.lastName }}</div>
+          <div v-if="editMode">
+            created by User: {{ user.firstName }} {{ user.lastName }}
+          </div>
         </div>
         <v-btn icon>
           <v-icon @click="editMode = !editMode">mdi-pencil</v-icon>
@@ -34,7 +36,7 @@
 
 <script>
 import ViewRecipeSite from "@/components/recipeviewcomponents/ViewRecipeSite";
-import {firestore} from "@/plugins/firebase";
+import { firestore } from "@/plugins/firebase";
 
 export default {
   name: "RecipeView",
@@ -47,7 +49,7 @@ export default {
     return {
       recipeId: this.$route.params.recipe_id,
       editMode: false,
-      user: null,
+      user: null
     };
   },
   methods: {
@@ -65,7 +67,7 @@ export default {
         .get()
         .then(userSnap => {
           userSnap.forEach(user => {
-            this.user = user.data()
+            this.user = user.data();
           });
         });
     },

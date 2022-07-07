@@ -101,28 +101,34 @@
         class="stepsheet pa-3 pb-0 mb-14"
       >
         <template v-for="(step, i) in recipe.recipeDescription">
-          <v-textarea
-            background-color="white"
-            :key="i"
-            height="100px"
-            outlined
-            :label="step.nr + '. Schritt'"
-            v-model="step.text"
-            :rules="filled"
-            :append-icon="step.nr > 1 ? 'mdi-minus' : ''"
-            @click:append="deleteStep(i)"
-          ></v-textarea>
-          <v-btn
-            v-if="step.nr != recipe.recipeDescription.length"
-            color="white"
-            height="18px"
-            class="rounded-b-pill"
-            tile
-            style="position: relative; top:-35px; left: 45%;"
-            @click="addStepBetween(step.nr)"
-            :key="`${i}+addStep`"
-            >+
-          </v-btn>
+          <v-row :key="i">
+            <v-col cols="3">
+              <v-skeleton-loader type="image" height="100"></v-skeleton-loader>
+            </v-col>
+            <v-col cols="9">
+              <v-textarea
+                background-color="white"
+                height="100px"
+                outlined
+                :label="step.nr + '. Schritt'"
+                v-model="step.text"
+                :rules="filled"
+                :append-icon="step.nr > 1 ? 'mdi-minus' : ''"
+                @click:append="deleteStep(i)"
+              ></v-textarea>
+              <v-btn
+                v-if="step.nr != recipe.recipeDescription.length"
+                color="white"
+                height="18px"
+                class="rounded-b-pill"
+                tile
+                style="position: relative; top:-35px; left: 45%;"
+                @click="addStepBetween(step.nr)"
+                :key="`${i}+addStep`"
+                >+
+              </v-btn>
+            </v-col>
+          </v-row>
         </template>
         <div width="100%" class="ma-0 pa-0 text-center">
           <v-btn
