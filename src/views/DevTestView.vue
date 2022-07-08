@@ -31,14 +31,19 @@ export default {
     photos: [],
     clientId:
       "539624071543-3lo6c838t6gpc85js56kmlmsve3hv0cf.apps.googleusercontent.com",
-    clientKey:
-      "2oW7WHlDrTNYXd4Cwci1q4e2"
+    clientKey: "2oW7WHlDrTNYXd4Cwci1q4e2"
   }),
   methods: {
     getPhotos() {
-      fetch("https://photos.app.goo.gl/wHidnovhXrHwhEoE9").then(res => {
-        console.log("res", res);
-      });
+      const scope = "https://www.googleapis.com/auth/photoslibrary.readonly"
+      fetch("https://photoslibrary.googleapis.com/v1/albums", {
+        method: "GET",
+        headers: { Authentication: "Bearer Token" }
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log(scope, data);
+        });
     }
   },
   computed: {}
