@@ -25,24 +25,23 @@
 </template>
 
 <script>
+import { web } from "../plugins/photocredentials.json";
 export default {
   name: "DevTestView",
   data: () => ({
-    photos: [],
-    clientId:
-      "539624071543-3lo6c838t6gpc85js56kmlmsve3hv0cf.apps.googleusercontent.com",
-    clientKey: "2oW7WHlDrTNYXd4Cwci1q4e2"
+    photos: []
   }),
   methods: {
     getPhotos() {
-      const scope = "https://www.googleapis.com/auth/photoslibrary.readonly"
+      const scope = "https://www.googleapis.com/auth/photoslibrary.readonly";
+      const key = web.clientKey;
       fetch("https://photoslibrary.googleapis.com/v1/albums", {
         method: "GET",
         headers: { Authentication: "Bearer Token" }
       })
         .then(res => res.json())
         .then(data => {
-          console.log(scope, data);
+          console.log(scope, data, key);
         });
     }
   },
