@@ -27,6 +27,17 @@
               >
                 <v-img :src="step.img" />
               </v-list-item-avatar>
+              <div v-else>
+                <v-btn @click="pickFile">Datei<br />auswählen</v-btn>
+                <input
+                  class="caption ma-2"
+                  v-show="true"
+                  contenteditable="false"
+                  type="file"
+                  ref="fileInput"
+                  @change="onFilePicked"
+                />
+              </div>
               <v-list-item-title>
                 <div v-if="edit !== i">{{ i }} {{ step.text }}</div>
                 <v-text-field
@@ -88,7 +99,23 @@ export default {
                 this.loading = false;
               });
           });
-      }, 1000);
+      }, 10);
+    },
+
+    pickFile() {
+      this.$refs.fileInput.click();
+    },
+
+    onFilePicked(event) {
+      const files = event.target.files;
+      this.filename = files[0].name;
+      console.log("png", this.filename);
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.imgsrc = fileReader.result;
+      });
+      fileReader.readAsDataURL(files[0]);
+      this.image = files[0];
     },
 
     enterEditMode(i) {
