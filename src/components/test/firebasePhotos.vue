@@ -4,7 +4,7 @@
     <v-card-subtitle>
       <v-spacer />
       <v-btn small @click="fetchFotos">holen</v-btn>
-      edit: {{ edit }}
+      edit: {{ edit }}, stepNr: <span>{{ stepNr }}</span>
     </v-card-subtitle>
     <v-card-text class="slide-fade">
       <transition name="slide-fade" mode="out-in">
@@ -17,7 +17,7 @@
           <v-list key="listkey1">
             <v-list-item
               v-for="(step, i) in editRecipe.recipeDescription"
-              :key="step.nr"
+              :key="i"
             >
               <v-list-item-avatar
                 v-if="step.img !== undefined"
@@ -28,15 +28,16 @@
                 <v-img :src="step.img" />
               </v-list-item-avatar>
               <div v-else>
-                <v-btn @click="pickFile">Datei<br />auswählen</v-btn><br />
+                <v-btn @click="pickFile(i)"> <v-icon>mdi-camera</v-icon> </v-btn
+                ><br />
                 <div class="caption">{{ filename }}</div>
                 <v-file-input
                   class="caption"
                   flat
                   v-show="false"
                   prepend-icon="mdi-camera"
-                  ref="fileInput"
-                  id="uploader"
+                  type="file"
+                  :id="`step` + i"
                   @change="onFilePicked"
                 />
               </div>
@@ -66,7 +67,7 @@
 </template>
 
 <script>
-import firebase from "@/plugins/firebase";
+import firebase, { fireBucket } from "@/plugins/firebase";
 
 export default {
   name: "firebasePhotos",
@@ -77,7 +78,9 @@ export default {
     edit: null,
     stepToEdit: null,
     loading: false,
-    filename: ""
+    filename: "",
+    file: null,
+    stepNr: null
   }),
   methods: {
     fetchFotos() {
@@ -105,20 +108,51 @@ export default {
       }, 10);
     },
 
-    pickFile() {
-      document.getElementById("uploader").click();
+    pickFile(i) {
+      this.stepNr = i;
+      document.getElementById("step" + i).click();
     },
 
-    onFilePicked(event) {
-      const files = event.target.files;
-      this.filename = files[0].name;
-      console.log("png", this.filename);
-      const fileReader = new FileReader();
-      fileReader.addEventListener("load", () => {
-        this.imgsrc = fileReader.result;
-      });
-      fileReader.readAsDataURL(files[0]);
-      this.image = files[0];
+    async onFilePicked(file) {
+      console.log(file.name);
+      const path = `recipes/${this.editRecipe.id}/${file.name}`;
+      console.log("png", this.filename, path);
+      const storageRef = fireBucket.ref(path);
+
+      try {
+        await storageRef
+          .put(file)
+          .then(res => {
+            const url = res.ref.getDownloadURL();
+            console.log("url im Step gespeichert: ", url);
+            return url;
+          })
+          .then(url => {
+            this.editRecipe.recipeDescription[this.stepNr].img = url;
+            console.log(
+              "saved ",
+              this.editRecipe.recipeDescription[this.stepNr]
+            );
+          })
+          .then(() => {
+            firebase
+              .firestore()
+              .collection("recipes")
+              .doc(this.editRecipe.id)
+              .update({
+                recipeDescription: this.editRecipe.recipeDescription
+              })
+              .then(() => {
+                this.stepNr = null;
+                this.editRecipe = null;
+                this.fetchFotos();
+                this.edit = null;
+                this.loading = false;
+              });
+          });
+      } catch (err) {
+        console.log(err.message);
+      }
     },
 
     enterEditMode(i) {
@@ -129,7 +163,8 @@ export default {
     saveEditedStep(step) {
       this.loading = true;
       this.editRecipe.recipeDescription[step] = this.stepToEdit;
-      var store = firebase.firestore().collection("recipes");
+      const store = firebase.firestore().collection("recipes");
+      console.info("Update step nr. ", step);
       store
         .doc(this.editRecipe.id)
         .update({
