@@ -28,13 +28,15 @@
                 <v-img :src="step.img" />
               </v-list-item-avatar>
               <div v-else>
-                <v-btn @click="pickFile">Datei<br />auswählen</v-btn>
-                <input
-                  class="caption ma-2"
-                  v-show="true"
-                  contenteditable="false"
-                  type="file"
+                <v-btn @click="pickFile">Datei<br />auswählen</v-btn><br />
+                <div class="caption">{{ filename }}</div>
+                <v-file-input
+                  class="caption"
+                  flat
+                  v-show="false"
+                  prepend-icon="mdi-camera"
                   ref="fileInput"
+                  id="uploader"
                   @change="onFilePicked"
                 />
               </div>
@@ -74,7 +76,8 @@ export default {
     recipeOrigin: null,
     edit: null,
     stepToEdit: null,
-    loading: false
+    loading: false,
+    filename: ""
   }),
   methods: {
     fetchFotos() {
@@ -103,7 +106,7 @@ export default {
     },
 
     pickFile() {
-      this.$refs.fileInput.click();
+      document.getElementById("uploader").click();
     },
 
     onFilePicked(event) {
