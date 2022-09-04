@@ -10,7 +10,7 @@
         </div>
         <div v-else class="mx-auto headline">
           {{ activeRecipe.recipeName }}
-          <div v-if="editMode">
+          <div v-if="editMode && user">
             created by User: {{ user.firstName }} {{ user.lastName }}
           </div>
         </div>
@@ -57,6 +57,10 @@ export default {
       this.$store.dispatch("loadSingleRecipe", this.recipeId).then(() => {
         this.loadUser(this.activeRecipe.createdBy);
       });
+    },
+
+    enterEditMode() {
+      this.editMode = true;
     },
 
     loadUser(user) {

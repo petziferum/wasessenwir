@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <AppBar v-on:showdrawer="drawer = !drawer"></AppBar>
-
     <v-navigation-drawer app temporary v-model="drawer">
       <v-list>
         <v-list-item-group>

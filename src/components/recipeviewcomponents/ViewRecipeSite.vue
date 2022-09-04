@@ -89,7 +89,9 @@ export default {
       firestore
         .collection("recipes")
         .doc(this.recipe.id)
-        .update(this.recipe)
+        .update({
+          recipeDescription: this.recipe.recipeDescription
+        })
         .then(() => {
           console.log("geupdated", this.recipe);
         })
