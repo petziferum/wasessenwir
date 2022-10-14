@@ -14,7 +14,7 @@
         transition="scale-transition"
         height="60"
         width="100"
-      />
+      />pwa
     </div>
 
     <v-spacer></v-spacer>
