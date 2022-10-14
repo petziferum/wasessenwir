@@ -163,7 +163,7 @@ export default {
     saveEditedStep(step) {
       this.loading = true;
       this.editRecipe.recipeDescription[step] = this.stepToEdit;
-      const store = firebase.firestore().collection( "recipes");
+      const store = firebase.firestore().collection("recipes");
       console.info("Update step nr. ", step);
       store
         .doc(this.editRecipe.id)

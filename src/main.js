@@ -6,6 +6,7 @@ import vuetify from "./plugins/vuetify";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import { fireAuth } from "@/plugins/firebase";
+import "./registerServiceWorker";
 Vue.config.productionTip = false;
 
 Vue.use(Toast, {

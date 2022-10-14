@@ -5,7 +5,7 @@ import Home from "../views/Home.vue";
 import UploadImage from "@/views/UploadImage";
 import Inventar from "@/views/Inventar";
 import { fireAuth } from "@/plugins/firebase";
-import DevTestView from "@/views/DevTestView"
+import DevTestView from "@/views/DevTestView";
 
 Vue.use(VueRouter);
 

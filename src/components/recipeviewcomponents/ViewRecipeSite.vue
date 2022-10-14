@@ -88,7 +88,14 @@ export default {
         this.editItemNumber - 1
       ].text = this.editItemText;
 
-      console.log("edit save id: ",this.recipe.id, ", ", this.recipe.recipeDescription, " mit ", this.editItemText)
+      console.log(
+        "edit save id: ",
+        this.recipe.id,
+        ", ",
+        this.recipe.recipeDescription,
+        " mit ",
+        this.editItemText
+      );
       firestore
         .collection("recipes")
         .doc(this.recipe.id)
@@ -96,7 +103,9 @@ export default {
           recipeDescription: this.recipe.recipeDescription
         })
         .then(() => {
-          this.$toast.success("Beschreibung gespeichert!\n" + this.editItemText)
+          this.$toast.success(
+            "Beschreibung gespeichert!\n" + this.editItemText
+          );
           console.log("geupdated", this.recipe);
         })
         .catch(error => {

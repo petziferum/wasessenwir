@@ -20,7 +20,7 @@ import GooglePhotos from "@/components/test/googlePhotos";
 import FirebasePhotos from "@/components/test/firebasePhotos";
 export default {
   name: "DevTestView",
-  components: {FirebasePhotos, GooglePhotos},
+  components: { FirebasePhotos, GooglePhotos }
 };
 </script>
 
