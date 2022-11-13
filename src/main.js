@@ -12,19 +12,19 @@ Vue.config.productionTip = false;
 Vue.use(Toast, {
   timeout: 3000,
   draggable: true,
-  position: "bottom-center"
+  position: "bottom-center",
 });
 let app;
-fireAuth.onAuthStateChanged(user => {
+fireAuth.onAuthStateChanged((user) => {
   if (!app) {
     app = new Vue({
       router,
       store,
       vuetify,
-      render: h => h(App),
+      render: (h) => h(App),
       created() {
-        this.$store.commit("SET_USER", user);
-      }
+        this.$store.dispatch("autoLogin", user);
+      },
     }).$mount("#app");
   }
 });

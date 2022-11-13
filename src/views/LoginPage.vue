@@ -13,7 +13,7 @@
                   type="password"
                   v-model="password"
                 ></v-text-field>
-                <v-card-text style="color:#ff0000" v-if="errorMessage.state">{{
+                <v-card-text style="color: #ff0000" v-if="errorMessage.state">{{
                   errorMessage.text
                 }}</v-card-text
                 ><br />
@@ -44,25 +44,25 @@
 </template>
 
 <script>
-import * as firebase from "firebase";
 
 export default {
   name: "LoginPage",
   data: () => ({
     errorMessage: "",
     email: "",
-    password: ""
+    password: "",
   }),
   methods: {
     logIn() {
-      firebase
+      this.$store.dispatch("userLogin", { email: this.email, password: this.password })
+      /*firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password) //testtest
-        .then(res => {
+        .then((res) => {
           this.$store.state.user = res.user;
           this.$router.push(this.$route.query.from || "/");
         })
-        .catch(error => {
+        .catch((error) => {
           this.errorMessage.state = true;
           this.errorMessage.text = error;
           console.error("fehler", error);
@@ -70,13 +70,15 @@ export default {
         .finally(() => {
           this.$refs.loginForm.reset();
         });
-    }
+
+       */
+    },
   },
   computed: {
     user() {
       return this.$store.getters.getUser;
-    }
-  }
+    },
+  },
 };
 </script>
 

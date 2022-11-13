@@ -14,14 +14,8 @@
         transition="scale-transition"
         height="60"
         width="100"
-      />pwa
+      />{{ loading() }}
     </div>
-
-    <v-spacer></v-spacer>
-    <v-btn icon to="/userdashboard"
-      ><v-icon large :color="user ? 'green' : 'red'">mdi-account</v-icon></v-btn
-    >
-    <p v-if="user">Hi - {{ userdata.email }}</p>
 
     <template v-if="$vuetify.breakpoint.mdAndUp" v-slot:extension>
       <v-tabs>
@@ -31,21 +25,58 @@
           {{ item.title }}
         </v-tab>
       </v-tabs>
+
+      <v-spacer />
+
+      <v-menu open-on-hover bottom offset-y>
+        <template v-slot:activator="{ on }">
+          <v-btn tile class="usermenu elevation-0" v-on="on">
+            <v-icon small>mdi-account</v-icon>
+            {{ user ? "Hallo " + user.userName : "Login" }}
+          </v-btn>
+        </template>
+        <v-list tile>
+          <v-list-item link v-if="!user" to="/login">
+            <v-list-item-title>Login</v-list-item-title>
+          </v-list-item>
+          <template v-if="user">
+            <v-list-item link to="/userdashboard">
+              <v-list-item-title>User Dashboard</v-list-item-title>
+            </v-list-item>
+            <v-list-item link @click="logout">
+              <v-list-item-title>Logout</v-list-item-title>
+            </v-list-item>
+          </template>
+        </v-list>
+      </v-menu>
     </template>
   </v-app-bar>
 </template>
 
 <script>
 import { fireAuth } from "@/plugins/firebase";
+import UserAuthentication from "@/components/authentication/UserAuthentication";
 
 export default {
   name: "AppBar",
   data: () => ({
-    logo: require("@/assets/fast-food.svg")
+    logo: require("@/assets/fast-food.svg"),
   }),
-  methods: {},
+  methods: {
+    loading() {
+      return this.$store.getters.loading;
+    },
+    logout() {
+      UserAuthentication.userSignout().then((message) => {
+        this.$router.push("/");
+        this.$store.commit("SET_USER", null);
+        this.$toast(message);
+      });
+    },
+  },
   computed: {
     user() {
+      console.log(this.$store.getters.getUser);
       return this.$store.getters.getUser;
     },
     userdata() {
@@ -53,9 +84,19 @@ export default {
     },
     menuItems() {
       return this.$store.getters.menuItems;
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.usermenu {
+  position: absolute;
+  cursor: default;
+  margin: 0;
+  right: 0;
+  padding: 0;
+  bottom: 0;
+  background-color: rgba(250, 250, 250, 0.4) !important;
+}
+</style>
