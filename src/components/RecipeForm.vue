@@ -1,5 +1,6 @@
 <template>
   <v-card flat class="ma-0 mt-10 pa-1">
+    <v-card-subtitle>CreatedBy: {{ recipe.createdBy}}</v-card-subtitle>
     <v-form ref="form" @submit.prevent="openD">
       <v-text-field
         name="name"
@@ -248,7 +249,7 @@
             <br />
             speichern?
           </v-card-title>
-          <v-card-subtitle>{{ recipe.createdBy.email }}</v-card-subtitle>
+          <v-card-subtitle>Created By: {{ recipe.createdBy }}</v-card-subtitle>
           <v-card-text>
             <p><b>Zutaten</b></p>
             <ul>
@@ -323,8 +324,8 @@ export default {
     }
   },
   beforeMount() {
-    this.recipe.createdBy = this.user.uid;
-    console.log("recipeForm:", this.user.uid, this.recipeObject);
+    this.recipe.createdBy = this.user.id;
+    console.log("recipeForm:", this.user.id, this.recipeObject);
     if (this.edit) {
       this.editMode = this.edit;
     }
@@ -440,6 +441,7 @@ export default {
       console.log("Rezept wird gespeichert", this.recipe, this.recipe.time);
       this.$emit("saveRecipe", this.recipe);
     },
+
     addIngredient(event) {
       console.log(event);
       let tempNr = 0;
@@ -487,18 +489,15 @@ export default {
         imageName: this.recipe.filename,
         imageSrc: this.recipe.imageSrc,
         ingredients: this.recipe.ingredients,
-        createdBy: this.$store.getters.getUser
+        createdBy: this.recipe.createdBy
       };
-      console.log(
-        "openD",
-        saveR,
-        this.$refs.form.validate(),
-        this.finishDialog
-      );
+      console.info("open Dialog - saveR", saveR)
       if (this.$refs.form.validate()) {
         console.log("valid");
         this.finishDialog = true;
         this.$store.commit("loading", true);
+      } else {
+        this.$toast.info("Es ist ein Fehler aufgetreten: Validation - " + this.$refs.form.validate())
       }
     }
   }

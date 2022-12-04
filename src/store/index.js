@@ -113,7 +113,7 @@ export default new Vuex.Store({
         const recipe = Meal.createNewMeal(recipeData);
 
         commit("SET_ACTIVE_RECIPE", recipe);
-        setTimeout(() => commit("loading", false), 500);
+        setTimeout(() => commit("loading", false), 800);
       });
     },
 

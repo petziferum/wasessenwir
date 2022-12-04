@@ -22,8 +22,10 @@ fireAuth.onAuthStateChanged((user) => {
       store,
       vuetify,
       render: (h) => h(App),
-      created() {
-        this.$store.dispatch("autoLogin", user);
+      beforeCreate() {
+        if (user != null) {
+          this.$store.dispatch("autoLogin", user);
+        }
       },
     }).$mount("#app");
   }

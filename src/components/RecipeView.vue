@@ -9,9 +9,9 @@
           <v-skeleton-loader type="sentences" width="450"></v-skeleton-loader>
         </div>
         <div v-else class="mx-auto headline">
-          {{ activeRecipe.recipeName }}
-          <div v-if="editMode && user">
-            created by User: {{ user.firstName }} {{ user.lastName }}
+          <span v-if="activeRecipe != null">{{ activeRecipe.recipeName }}</span>
+          <div v-if="editMode && storeUser">
+            created by User: {{ storeUser.firstName }} {{ storeUser.lastName }}
           </div>
         </div>
         <v-btn icon>
@@ -27,8 +27,9 @@
           ></v-skeleton-loader>
         </v-col>
         <v-col cols="12" v-if="!loading" class="pa-0 ma-0">
-          <view-recipe-site :edit="editMode" :activerecipe="activeRecipe" />
+          <view-recipe-site v-if="activeRecipe != null" :edit="editMode" :activerecipe="activeRecipe" />
         </v-col>
+        <v-col v-else><v-icon x-large>mdi-loading mdi-spin</v-icon></v-col>
       </v-row>
     </v-col>
   </v-row>
@@ -55,7 +56,9 @@ export default {
   methods: {
     loadRecipe() {
       this.$store.dispatch("loadSingleRecipe", this.recipeId).then(() => {
-        this.loadUser(this.activeRecipe.createdBy);
+        if(this.activeRecipe != null) {
+          this.loadUser(this.activeRecipe.createdBy);
+        }
       });
     },
 
@@ -82,6 +85,10 @@ export default {
     }
   },
   computed: {
+    storeUser() {
+      return this.$store.getters.getUser;
+    },
+
     loading() {
       return this.$store.state.loading;
     },

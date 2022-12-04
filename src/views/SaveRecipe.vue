@@ -14,7 +14,7 @@
                   <RecipeForm
                     :edit="true"
                     :recipeObject="newRecipe"
-                    v-on:saveRecipe="saveFile"
+                    @saveRecipe="saveFile"
                   ></RecipeForm>
                 </v-col>
               </v-row>
