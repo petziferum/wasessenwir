@@ -132,7 +132,7 @@ export default {
       this.newRecipe = recipeClear;
       this.finishDialog = false;
       console.log("this.user.id", this.user.uid);
-      emittedRecipe.createdBy = this.user.uid;
+      //emittedRecipe.createdBy = this.user.uid;
       let input = emittedRecipe;
       console.log("emittedRecipe", emittedRecipe);
       //const metadata = { contentType: "image/jpeg" }
