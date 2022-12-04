@@ -14,7 +14,7 @@
         transition="scale-transition"
         height="60"
         width="100"
-      />{{ loading() }}
+      /><v-icon x-large v-if="loading">mdi-loading mdi-spin</v-icon>
     </div>
 
     <template v-if="$vuetify.breakpoint.mdAndUp" v-slot:extension>
@@ -63,9 +63,7 @@ export default {
     logo: require("@/assets/fast-food.svg"),
   }),
   methods: {
-    loading() {
-      return this.$store.getters.loading;
-    },
+
     logout() {
       UserAuthentication.userSignout().then((message) => {
         this.$router.push("/");
@@ -75,6 +73,9 @@ export default {
     },
   },
   computed: {
+    loading() {
+      return this.$store.getters.loading;
+    },
     user() {
       console.log(this.$store.getters.getUser);
       return this.$store.getters.getUser;
